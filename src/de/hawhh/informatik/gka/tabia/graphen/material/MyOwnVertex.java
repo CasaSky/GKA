@@ -5,8 +5,12 @@ public class MyOwnVertex
     private String name;
     private int attribute;
     private boolean withattribute;
+    private int kantenGewicht;
+	private int omega = Integer.MAX_VALUE;
+	private MyOwnVertex vorgaenger;
+	private int vorgaengerKantenGewicht;
     
-    public MyOwnVertex()
+	public MyOwnVertex()
     {}
     
     public MyOwnVertex(String name, int attribute) 
@@ -14,7 +18,19 @@ public class MyOwnVertex
         this.name = name;
         this.attribute = attribute;
         this.withattribute = true;
+        this.kantenGewicht = omega;
+        this.vorgaenger = null;
+        this.vorgaengerKantenGewicht = 0;
     }
+    
+    public MyOwnVertex(String name, int attribute, int kantenGewicht) 
+    {
+        this.name = name;
+        this.attribute = attribute;
+        this.withattribute = true;
+        this.kantenGewicht = kantenGewicht;
+    }
+    
     public MyOwnVertex(String name) 
     {
         this.name = name;
@@ -49,20 +65,55 @@ public class MyOwnVertex
 	{
 		return name;
 	}
+	
 	public int getAttribute()
 	{
 		return attribute;
 	}
+	
 	public void setName(String name)
 	{
 		this.name = name;
 	}
+	
 	public void setAttribute(int attribute)
 	{
 		this.attribute = attribute;
 	} 
+	
 	public boolean withattribute()
 	{
 		return withattribute;
 	}
+	
+    public int getKantenGewicht()
+	{
+		return kantenGewicht;
+	}
+
+	public void setKantenGewicht(int kantenGewicht)
+	{
+		this.kantenGewicht = kantenGewicht;
+	}
+
+	public void setVorgaenger(MyOwnVertex vorgaenger)
+	{
+		this.vorgaenger = vorgaenger;
+	}
+
+	public MyOwnVertex getVorgaenger()
+	{
+		return vorgaenger;
+	}
+
+	public int getVorgaengerKantenGewicht()
+	{
+		return vorgaengerKantenGewicht;
+	}
+
+	public void setVorgaengerKantenGewicht(int vorgaengerKantenGewicht)
+	{
+		this.vorgaengerKantenGewicht = vorgaengerKantenGewicht;
+	}
+	
 }
