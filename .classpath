@@ -6,5 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ColtGraph"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/collections-generic-Graph"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jung"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JGraphT"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

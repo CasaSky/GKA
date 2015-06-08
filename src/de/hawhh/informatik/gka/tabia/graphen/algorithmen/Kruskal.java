@@ -8,19 +8,17 @@ import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnEdge;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 import de.hawhh.informatik.gka.tabia.graphen.service.Laufzeit;
-import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 import de.hawhh.informatik.gka.tabia.graphen.material.BigGraph;
 
-public class KruskalAlgorithm
+public class Kruskal
 {
 	private List<MyOwnEdge> _kantenSet;
 	private JungGraph _originGraph;
 	private JungGraph _minimalgeruest;
 	private Laufzeit laufzeit;
-	private int kantenGewichtSumme;
+	private int kantenGewichtSumme=0;
 	
-	
-	public KruskalAlgorithm(JungGraph graph)
+	public Kruskal(JungGraph graph)
 	{
 		assert graph != null : "Vorbedingung verletzt: graph != null";
 		_originGraph = graph;
@@ -45,11 +43,12 @@ public class KruskalAlgorithm
     	{	
     		MyOwnVertex source = e.source();
     		MyOwnVertex target = e.target();
-    		ASternAlgorithm astern = new ASternAlgorithm(_minimalgeruest, source, target);
+    		AStern astern = new AStern(_minimalgeruest, source, target);
     		if (astern.start())
     			continue;
-    		
-    		_minimalgeruest.kanteEinfuegen(source, target, e.getGewicht());
+    		int kantenGewicht = e.getGewicht();
+    		kantenGewichtSumme += kantenGewicht;
+    		_minimalgeruest.kanteEinfuegen(source, target, kantenGewicht);
     	}
     	laufzeit.stop();
     }
@@ -63,18 +62,22 @@ public class KruskalAlgorithm
 	{
 		BigGraph biggraph = new BigGraph("#attributed #weighted", 1000, 6000);
 		biggraph.generateGraph();
-		biggraph.show();
-		KruskalAlgorithm kruskal = new KruskalAlgorithm(biggraph.graph());
+		//biggraph.show();
+		Kruskal kruskal = new Kruskal(biggraph.graph());
 		kruskal.start();
 		System.out.println(kruskal.laufzeit().toString());
-		@SuppressWarnings("unused")
-		JungWerkzeug werkzeug1 = new JungWerkzeug(biggraph.graph());
-		@SuppressWarnings("unused")
-		JungWerkzeug werkzeug2 = new JungWerkzeug(kruskal._minimalgeruest);
+		//JungWerkzeug werkzeug1 = new JungWerkzeug(biggraph.graph());
+		//JungWerkzeug werkzeug2 = new JungWerkzeug(kruskal._minimalgeruest);
+		System.out.println(kruskal.kantenGewichtSumme());
 	}
 	public JungGraph minimalgeruest()
 	{
 		return _minimalgeruest;
+	}
+
+	public int kantenGewichtSumme()
+	{
+		return kantenGewichtSumme;
 	}
 
 }

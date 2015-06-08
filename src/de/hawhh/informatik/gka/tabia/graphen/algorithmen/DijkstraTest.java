@@ -13,13 +13,13 @@ import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 
 
 
-public class DijkstraAlgorithmTest
+public class DijkstraTest
 {
 	JungGraph graph = new JungGraph("#directed #weighted");
 	String pfad = "C:/Users/talal_000/Dropbox/Java/EclipseWorkspace/bspGraphen/bsp3.graph";
 	DateiManager manager;
 	JungGraph graph3;
-	DijkstraAlgorithm di;
+	Dijkstra di;
 	
 	public void leseEin()
 	{
@@ -40,7 +40,7 @@ public class DijkstraAlgorithmTest
 	{
 		MyOwnVertex anfang = new MyOwnVertex("a");
 		MyOwnVertex ende = new MyOwnVertex("e");
-		di = new DijkstraAlgorithm(graph, anfang, ende);
+		di = new Dijkstra(graph, anfang, ende);
 		assertEquals(anfang, di.getAnfang());
 		assertEquals(ende, di.getTarget());
 		assertEquals(graph, di.graph());
@@ -56,7 +56,7 @@ public class DijkstraAlgorithmTest
 		graph.kanteEinfuegen(new MyOwnVertex("d"), new MyOwnVertex("e"), 1);
 		// Beispiel für einen Graphen mit einem Weg von a nach e, wobei der kürzest Weg ist über a-d-e
 
-		di = new DijkstraAlgorithm(graph, new MyOwnVertex("a"), new MyOwnVertex("e"));
+		di = new Dijkstra(graph, new MyOwnVertex("a"), new MyOwnVertex("e"));
 		assertTrue(di.start());
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("a"));
@@ -76,7 +76,7 @@ public class DijkstraAlgorithmTest
 
 		// Beispiel 3
 
-		di = new DijkstraAlgorithm(graph3, new MyOwnVertex("Münster",237), new MyOwnVertex("Hamburg",0));
+		di = new Dijkstra(graph3, new MyOwnVertex("Münster",237), new MyOwnVertex("Hamburg",0));
 		assertTrue(di.start());
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("Münster",237));
@@ -96,7 +96,7 @@ public class DijkstraAlgorithmTest
 
 		// Beispiel 3
 
-		di = new DijkstraAlgorithm(graph3, new MyOwnVertex("Minden",157), new MyOwnVertex("Hamburg",0));
+		di = new Dijkstra(graph3, new MyOwnVertex("Minden",157), new MyOwnVertex("Hamburg",0));
 		assertTrue(di.start());
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("Minden",157));
@@ -116,7 +116,7 @@ public class DijkstraAlgorithmTest
 
 		// Beispiel 3
 
-		di = new DijkstraAlgorithm(graph3, new MyOwnVertex("Husum",120), new MyOwnVertex("Hamburg",0));
+		di = new Dijkstra(graph3, new MyOwnVertex("Husum",120), new MyOwnVertex("Hamburg",0));
 		assertTrue(di.start());
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("Husum",120));
@@ -140,7 +140,7 @@ public class DijkstraAlgorithmTest
 		MyOwnVertex source = new MyOwnVertex("Münster",237);
 		MyOwnVertex target = new MyOwnVertex("Hamburg",0);
 		
-		di = new DijkstraAlgorithm(graph3, source, target);
+		di = new Dijkstra(graph3, source, target);
 		di.start();
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("Münster",237));

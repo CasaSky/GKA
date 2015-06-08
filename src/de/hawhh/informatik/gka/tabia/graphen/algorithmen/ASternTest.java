@@ -11,14 +11,14 @@ import de.hawhh.informatik.gka.tabia.graphen.daten.DateiManager;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 
-public class ASternAlgorithmTest 
+public class ASternTest 
 {
 
 	JungGraph graph = new JungGraph("#directed #weighted");
 	String pfad = "C:/Users/talal_000/Dropbox/Java/EclipseWorkspace/bspGraphen/bsp3.graph";
 	DateiManager manager;
 	JungGraph graph3;
-	ASternAlgorithm astern;
+	AStern astern;
 	
 	public void leseEin()
 	{
@@ -39,7 +39,7 @@ public class ASternAlgorithmTest
 	{
 		MyOwnVertex anfang = new MyOwnVertex("a");
 		MyOwnVertex ende = new MyOwnVertex("e");
-		astern = new ASternAlgorithm(graph, anfang, ende);
+		astern = new AStern(graph, anfang, ende);
 		assertEquals(anfang, astern.getAnfang());
 		assertEquals(ende, astern.getTarget());
 		assertEquals(graph, astern.graph());
@@ -55,7 +55,7 @@ public class ASternAlgorithmTest
 		graph.kanteEinfuegen(new MyOwnVertex("d"), new MyOwnVertex("e"), 1);
 		// Beispiel für einen Graphen mit einem Weg von a nach e, wobei der kürzest Weg ist über a-d-e
 
-		astern = new ASternAlgorithm(graph, new MyOwnVertex("a"), new MyOwnVertex("e"));
+		astern = new AStern(graph, new MyOwnVertex("a"), new MyOwnVertex("e"));
 		assertTrue(astern.start());
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("a"));
@@ -75,7 +75,7 @@ public class ASternAlgorithmTest
 
 		// Beispiel 3
 
-		astern = new ASternAlgorithm(graph3, new MyOwnVertex("Münster",237), new MyOwnVertex("Hamburg",0));
+		astern = new AStern(graph3, new MyOwnVertex("Münster",237), new MyOwnVertex("Hamburg",0));
 		assertTrue(astern.start());
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("Münster",237));
@@ -95,7 +95,7 @@ public class ASternAlgorithmTest
 
 		// Beispiel 3
 
-		astern = new ASternAlgorithm(graph3, new MyOwnVertex("Minden",157), new MyOwnVertex("Hamburg",0));
+		astern = new AStern(graph3, new MyOwnVertex("Minden",157), new MyOwnVertex("Hamburg",0));
 		assertTrue(astern.start());
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("Minden",157));
@@ -115,7 +115,7 @@ public class ASternAlgorithmTest
 
 		// Beispiel 3
 
-		astern = new ASternAlgorithm(graph3, new MyOwnVertex("Husum",120), new MyOwnVertex("Hamburg",0));
+		astern = new AStern(graph3, new MyOwnVertex("Husum",120), new MyOwnVertex("Hamburg",0));
 		assertTrue(astern.start());
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("Husum",120));
@@ -139,7 +139,7 @@ public class ASternAlgorithmTest
 		MyOwnVertex source = new MyOwnVertex("Münster",237);
 		MyOwnVertex target = new MyOwnVertex("Hamburg",0);
 		
-		astern = new ASternAlgorithm(graph3, source, target);
+		astern = new AStern(graph3, source, target);
 		astern.start();
 		ArrayList<MyOwnVertex> shortPath = new ArrayList<>();
 		shortPath.add(new MyOwnVertex("Münster",237));

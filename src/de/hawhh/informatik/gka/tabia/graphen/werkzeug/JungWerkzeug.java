@@ -10,7 +10,7 @@ import java.util.Collection;
 
 import javax.swing.JOptionPane;
 
-import de.hawhh.informatik.gka.tabia.graphen.algorithmen.DijkstraAlgorithm;
+import de.hawhh.informatik.gka.tabia.graphen.algorithmen.Dijkstra;
 import de.hawhh.informatik.gka.tabia.graphen.daten.DateiManager;
 import de.hawhh.informatik.gka.tabia.graphen.material.BigGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
@@ -26,7 +26,7 @@ public class JungWerkzeug
 	private DateiManager dateimanager;
 	private PickedState<MyOwnVertex> pickedState;
 	private JungUI ui;
-	DijkstraAlgorithm di;
+	Dijkstra di;
 	
 	public JungWerkzeug(String pfad)
 	{
@@ -157,7 +157,7 @@ public class JungWerkzeug
 		 //System.out.println("Source: "+selektedVertex.get(0)+" Target: "+selektedVertex.get(1));
 		// MyBFS bfs = new MyBFS(sgv, selektedVertex.get(0), selektedVertex.get(1));
 		// return (bfs.sucheTarget(selektedVertex.get(0)));
-		 di = new DijkstraAlgorithm(sgv, selektedVertex.get(0), selektedVertex.get(1));
+		 di = new Dijkstra(sgv, selektedVertex.get(0), selektedVertex.get(1));
 		 return di.start();
 	 }
 	 
@@ -174,7 +174,7 @@ public class JungWerkzeug
 			if (array.length!=0)
 			{
 			MyOwnVertex source = ((MyOwnVertex) array[0]);
-			di = new DijkstraAlgorithm(big.graph(), source, target);
+			di = new Dijkstra(big.graph(), source, target);
 			boolean found = di.start();
 			return found;
 			}

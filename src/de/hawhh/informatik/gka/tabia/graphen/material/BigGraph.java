@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import javax.swing.JOptionPane;
 
-import de.hawhh.informatik.gka.tabia.graphen.algorithmen.ASternAlgorithm;
-import de.hawhh.informatik.gka.tabia.graphen.algorithmen.DijkstraAlgorithm;
+import de.hawhh.informatik.gka.tabia.graphen.algorithmen.AStern;
+import de.hawhh.informatik.gka.tabia.graphen.algorithmen.Dijkstra;
 import de.hawhh.informatik.gka.tabia.graphen.daten.DateiManager;
 import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 
@@ -122,8 +122,8 @@ public class BigGraph
 		if (array.length!=0)
 		{
 		MyOwnVertex source = ((MyOwnVertex) array[0]);
-		DijkstraAlgorithm di = new DijkstraAlgorithm(big.graph(), source, target);
-		ASternAlgorithm astern = new ASternAlgorithm(big.graph(), source, target);
+		Dijkstra di = new Dijkstra(big.graph(), source, target);
+		AStern astern = new AStern(big.graph(), source, target);
 		di.start();
 		astern.start();
 		data += "Dijktra ShortPath: "+di.shortPath()+" A* ShortPath: "+astern.shortPath()+"\r\n ";
@@ -151,8 +151,8 @@ public class BigGraph
 		MyOwnVertex source = ((MyOwnVertex) array[0]);
 		System.out.println(target.getName());
 		System.out.println(source.getName());
-		DijkstraAlgorithm di = new DijkstraAlgorithm(big.graph(), source, target);
-		ASternAlgorithm astern = new ASternAlgorithm(big.graph(), source, target);
+		Dijkstra di = new Dijkstra(big.graph(), source, target);
+		AStern astern = new AStern(big.graph(), source, target);
 		di.start();
 		astern.start();
 		di.start();

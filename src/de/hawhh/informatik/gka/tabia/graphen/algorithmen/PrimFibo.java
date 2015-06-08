@@ -5,41 +5,36 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Set;
+
+import org.jgrapht.util.FibonacciHeap;
 
 import de.hawhh.informatik.gka.tabia.graphen.material.BigGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnEdge;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 import de.hawhh.informatik.gka.tabia.graphen.service.Laufzeit;
-import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 
-public class PrimAlgorithm 
+public class PrimFibo
 {
+
 	private JungGraph _originGraph;
-	private Collection<MyOwnVertex> _knotenSammlung;
-	private Collection<MyOwnEdge> _kantenSammlung;
-	private JungGraph _spannbaum; // Graph T
+	private JungGraph _spannbaum;
 	private int kantenGewichtSumme=0;
-	private PriorityQueue<MyOwnVertex> queue;
+	private FibonacciHeap<MyOwnVertex> fiboheap;
 	private Laufzeit laufzeit;
 	private MyOwnVertex start;
 	private Set<MyOwnVertex> selectedKnoten ;
 	private int _verticesCount;
-	private Map<MyOwnVertex, Integer> distance;
-	private Map<MyOwnVertex, MyOwnVertex> predecessor;
+	private Map<MyOwnVertex, Integer> distance; // Die Entfernung vom Source zum Target
+	private Map<MyOwnVertex, MyOwnVertex> predecessor; // Target - Source
 
-	public PrimAlgorithm(JungGraph graph)
+	public PrimFibo(JungGraph graph)
 	{
 		_originGraph = graph;
-		_knotenSammlung = _originGraph.vertexSet();
-		_verticesCount = _knotenSammlung.size();
-		//_knotenAnzahl = graph.getMygraph().getVertexCount();
-		_kantenSammlung = new HashSet<>();
+		_verticesCount = _originGraph.getMygraph().getVertexCount();
 		distance = new HashMap<>();
-		queue = new PriorityQueue<MyOwnVertex>(new NodeCompator(distance));
-		//queue.addAll(_knotenSammlung);
+		fiboheap = new FibonacciHeap<MyOwnVertex>();
 		_spannbaum = new JungGraph(graph.getReferenz());
 		laufzeit = new Laufzeit();
 		selectedKnoten = new HashSet<MyOwnVertex>();
@@ -65,7 +60,7 @@ public class PrimAlgorithm
 	public MyOwnVertex randomKnoten()
 	{
 		int i = (int) (Math.random() * (_verticesCount - 0) + 0);
-		Object[] array = _knotenSammlung.toArray();
+		Object[] array = _originGraph.vertexSet().toArray();
 		return (MyOwnVertex) array[i];
 	}
     
@@ -74,48 +69,47 @@ public class PrimAlgorithm
 		laufzeit.start();
 		start = randomKnoten(); // ein beliebigen Knoten als Start Knoten festlegen
 		
-		distance.put(start, 0);
-		predecessor.put(start, start);
-		queue.offer(start);
+		distance.put(start, 0); // setze die Entfernung vom Start auf 0
+		predecessor.put(start, start); // Nachfolger
+		// TODO queue.offer(start);
 		selectedKnoten.add(start); // markiere start als besuchter Knoten
 
-		while (!queue.isEmpty())
+		while (!fiboheap.isEmpty())
 		{
-			MyOwnVertex source = queue.poll();
+			MyOwnVertex source = fiboheapMin();
+			fiboheap.removeMin();
 			selectedKnoten.add(source);
-			
-			// füge vertex in erg. grah
-			
-			//selectedKnoten.add(source);
-			Collection<MyOwnVertex> _neighborsSammlung = _originGraph.getMygraph().getNeighbors(source);
-			for (MyOwnVertex v : _neighborsSammlung)
+			// Gibt alle Benachbarten vom Source
+			Collection<MyOwnVertex> neighbors = _originGraph.getMygraph().getNeighbors(source);
+			for (MyOwnVertex target : neighbors)
 			{	
-				if (selectedKnoten.contains(v))
+				if (selectedKnoten.contains(target)) // wenn ja, wurde schon bearbeitet, nicht nehmen
 					continue;
 				
-				MyOwnEdge e = minimalEdge(source, v);
+				MyOwnEdge e = minimalEdge(source, target);
 				int kantenGewicht = e.getGewicht();
-				if (!distance.containsKey(v) || distance.get(v) > kantenGewicht)
+				if (!distance.containsKey(target) || distance.get(target) > kantenGewicht)
 				{
-					distance.put(v, kantenGewicht);
-					predecessor.put(v, source);
+					distance.put(target, kantenGewicht);
+					predecessor.put(target, source);
 				}
-				
-				// ------- hier wird die Kante gewählt
-				
-				if (!queue.contains(v))
-					queue.offer(v);
+								
+				//TODO if (!fiboheap.contains(target)) fiboheap.insert(target);
 				else
 				{
-					queue.remove(v);
-					queue.offer(v);
+					// TODO queue.remove(target);
+					// TODO queue.offer(target);
 				}
-				// Füge die Kante hinzu
-				_kantenSammlung.add(e);
 			}
 		}
 		laufzeit.stop();
 		erstelleSpannBaum();
+	}
+
+	private MyOwnVertex fiboheapMin()
+	{
+		//TODO
+		return null;
 	}
 
 	public MyOwnEdge minimalEdge(MyOwnVertex v1, MyOwnVertex v2)
@@ -132,9 +126,10 @@ public class PrimAlgorithm
 		}
 		return smallestEdge;
 	}
-	public void erstelleSpannBaum()
+	
+	private void erstelleSpannBaum()
 	{
-		for (MyOwnVertex v : _knotenSammlung)
+		for (MyOwnVertex v : selectedKnoten)
 		{
 			MyOwnVertex source = predecessor.get(v);
 			if (source!=null)
@@ -156,12 +151,12 @@ public class PrimAlgorithm
 		return laufzeit;
 	}
 
-	public static void main(String[] args) 	
-	{	
+	public static void main(String[] args)
+	{
 		BigGraph biggraph = new BigGraph("#attributed #weighted", 10000, 20000);
 		biggraph.generateGraph();
 		//biggraph.show();
-		PrimAlgorithm prim = new PrimAlgorithm(biggraph.graph());
+		PrimFibo prim = new PrimFibo(biggraph.graph());
 		prim.start();
 		System.out.println(prim.laufzeit().toString());
 		//JungWerkzeug werkzeug1 = new JungWerkzeug(biggraph.graph());

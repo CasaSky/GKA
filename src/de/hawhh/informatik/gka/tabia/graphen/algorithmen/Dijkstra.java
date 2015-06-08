@@ -13,7 +13,7 @@ import java.util.Set;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 
-public class DijkstraAlgorithm
+public class Dijkstra
 {
 	private int counter;
 	private JungGraph graph; // gelesener Graph
@@ -61,7 +61,7 @@ public class DijkstraAlgorithm
 		return mapNextFirst;
 	}
 
-	public DijkstraAlgorithm(JungGraph graph, MyOwnVertex source, MyOwnVertex target)
+	public Dijkstra(JungGraph graph, MyOwnVertex source, MyOwnVertex target)
 	{
 		this.graph = graph;
 		this.anfang = source;
@@ -167,7 +167,7 @@ public class DijkstraAlgorithm
 		graph.kanteEinfuegen(new MyOwnVertex("d"), new MyOwnVertex("e"), 1);
 		
 
-		DijkstraAlgorithm di = new DijkstraAlgorithm(graph, new MyOwnVertex("a"), new MyOwnVertex("e"));
+		Dijkstra di = new Dijkstra(graph, new MyOwnVertex("a"), new MyOwnVertex("e"));
 		boolean found = di.start();
 		System.out.println("Gefunden: "+ found);
 		System.out.println("X ist Nachfolger von Y: "+di.mapNextFirst.toString());

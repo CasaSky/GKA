@@ -8,11 +8,11 @@ import java.util.Queue;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 
-public class ASternAlgorithm extends DijkstraAlgorithm
+public class AStern extends Dijkstra
 {	
 	private Queue<MyOwnVertex> queue2;
 	
-	public ASternAlgorithm(JungGraph graph, MyOwnVertex source, MyOwnVertex target)
+	public AStern(JungGraph graph, MyOwnVertex source, MyOwnVertex target)
 	{
 		super(graph, source, target);
 		// Redifinition der Queue
@@ -48,7 +48,7 @@ public class ASternAlgorithm extends DijkstraAlgorithm
 		graph.kanteEinfuegen(new MyOwnVertex("d"), new MyOwnVertex("e"), 1);
 		
 
-		ASternAlgorithm astern = new ASternAlgorithm(graph, new MyOwnVertex("a"), new MyOwnVertex("e"));
+		AStern astern = new AStern(graph, new MyOwnVertex("a"), new MyOwnVertex("e"));
 		boolean found = astern.start();
 		System.out.println("Gefunden: "+ found);
 		System.out.println("X ist Nachfolger von Y: "+astern.mapNextFirst().toString());

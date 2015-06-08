@@ -6,8 +6,8 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import de.hawhh.informatik.gka.tabia.graphen.algorithmen.ASternAlgorithm;
-import de.hawhh.informatik.gka.tabia.graphen.algorithmen.DijkstraAlgorithm;
+import de.hawhh.informatik.gka.tabia.graphen.algorithmen.AStern;
+import de.hawhh.informatik.gka.tabia.graphen.algorithmen.Dijkstra;
 
 public class BigGraphTest
 {
@@ -26,8 +26,8 @@ public class BigGraphTest
 		if(array.length!=0)
 		{
 		MyOwnVertex source = ((MyOwnVertex) array[0]);
-		DijkstraAlgorithm di = new DijkstraAlgorithm(big.graph(), source, target);
-		ASternAlgorithm astern = new ASternAlgorithm(big.graph(), source, target);
+		Dijkstra di = new Dijkstra(big.graph(), source, target);
+		AStern astern = new AStern(big.graph(), source, target);
 		di.start();
 		astern.start();
 		assertEquals(di.shortPath(), astern.shortPath());
@@ -50,8 +50,8 @@ public class BigGraphTest
 		if(array.length!=0)
 		{
 		MyOwnVertex source = ((MyOwnVertex) array[0]);
-		DijkstraAlgorithm di = new DijkstraAlgorithm(big.graph(), source, target);
-		ASternAlgorithm astern = new ASternAlgorithm(big.graph(), source, target);
+		Dijkstra di = new Dijkstra(big.graph(), source, target);
+		AStern astern = new AStern(big.graph(), source, target);
 		di.start();
 		astern.start();
 		di.start();
