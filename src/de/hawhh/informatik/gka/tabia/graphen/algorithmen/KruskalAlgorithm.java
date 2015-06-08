@@ -11,14 +11,13 @@ import de.hawhh.informatik.gka.tabia.graphen.service.Laufzeit;
 import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 import de.hawhh.informatik.gka.tabia.graphen.material.BigGraph;
 
-
-
 public class KruskalAlgorithm
 {
 	private List<MyOwnEdge> _kantenSet;
 	private JungGraph _originGraph;
 	private JungGraph _minimalgeruest;
 	private Laufzeit laufzeit;
+	private int kantenGewichtSumme;
 	
 	
 	public KruskalAlgorithm(JungGraph graph)
@@ -49,6 +48,7 @@ public class KruskalAlgorithm
     		ASternAlgorithm astern = new ASternAlgorithm(_minimalgeruest, source, target);
     		if (astern.start())
     			continue;
+    		
     		_minimalgeruest.kanteEinfuegen(source, target, e.getGewicht());
     	}
     	laufzeit.stop();
@@ -61,14 +61,7 @@ public class KruskalAlgorithm
     
 	public static void main(String[] args)
 	{
-		JungGraph graph = new JungGraph("#attributed #weighted");
-//		graph.kanteEinfuegen(new MyOwnVertex("a", 0), new MyOwnVertex("b", 0), 5);
-//		graph.kanteEinfuegen(new MyOwnVertex("b", 0), new MyOwnVertex("c", 0), 1);
-//		graph.kanteEinfuegen(new MyOwnVertex("c", 0), new MyOwnVertex("f", 0), 2);
-//		graph.kanteEinfuegen(new MyOwnVertex("a", 0), new MyOwnVertex("d", 0), 1);
-//		graph.kanteEinfuegen(new MyOwnVertex("d", 0), new MyOwnVertex("e", 0), 4);
-//		graph.kanteEinfuegen(new MyOwnVertex("f", 0), new MyOwnVertex("e", 0), 3);
-		BigGraph biggraph = new BigGraph("#attributed #weighted", 1000, 10000);
+		BigGraph biggraph = new BigGraph("#attributed #weighted", 1000, 6000);
 		biggraph.generateGraph();
 		biggraph.show();
 		KruskalAlgorithm kruskal = new KruskalAlgorithm(biggraph.graph());
