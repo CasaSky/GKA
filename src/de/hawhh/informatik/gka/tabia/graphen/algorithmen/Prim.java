@@ -13,6 +13,7 @@ import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnEdge;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 import de.hawhh.informatik.gka.tabia.graphen.service.Laufzeit;
+import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 
 public class Prim 
 {
@@ -29,6 +30,7 @@ public class Prim
 
 	public Prim(JungGraph graph)
 	{
+		assert graph != null : "Vorbedingung verletzt: graph != null";
 		_originGraph = graph;
 		_verticesCount = _originGraph.getMygraph().getVertexCount();
 		distance = new HashMap<>();
@@ -106,6 +108,8 @@ public class Prim
 
 	public MyOwnEdge minimalEdge(MyOwnVertex v1, MyOwnVertex v2)
 	{
+		assert v1 != null : "Vorbedingung verletzt: v1 != null";
+		assert v2 != null : "Vorbedingung verletzt: v2 != null";
 		MyOwnEdge smallestEdge = null;
 		Collection<MyOwnEdge> edgeset = _originGraph.getMygraph().findEdgeSet(v1, v2);
 		
@@ -124,38 +128,44 @@ public class Prim
 		for (MyOwnVertex v : selectedKnoten)
 		{
 			MyOwnVertex source = predecessor.get(v);
-			if (source!=null)
+			assert source != null : "Vorbedingung verletzt: source != null";
+			
+			if (source!=null && !v.equals(source))
 			{
 				kantenGewichtSumme += distance.get(v);
-			_spannbaum.kanteEinfuegen(predecessor.get(v), v, distance.get(v));
+				_spannbaum.kanteEinfuegen(predecessor.get(v), v, distance.get(v));
 			}
 		}
 	}
 	public JungGraph spannbaum()
 	{
+		assert _spannbaum != null : "Vorbedingung verletzt: _spannbaum != null";
 		return _spannbaum;
 	}
 	
 	public int kantenGewichtSumme()
 	{
+		assert kantenGewichtSumme >= 0 : "Vorbedingung verletzt: kantenGewichtSumme >= 0";
 		return kantenGewichtSumme;
 	}
 	
 	public Laufzeit laufzeit()
 	{
+		assert laufzeit != null : "Vorbedingung verletzt: laufzeit != null";
 		return laufzeit;
 	}
 
 	public static void main(String[] args) 	
 	{	
-		BigGraph biggraph = new BigGraph("#attributed #weighted", 10000, 20000);
+		BigGraph biggraph = new BigGraph("#attributed #weighted", 10, 30);
 		biggraph.generateGraph();
-		//biggraph.show();
 		Prim prim = new Prim(biggraph.graph());
 		prim.start();
 		System.out.println(prim.laufzeit().toString());
-		//JungWerkzeug werkzeug1 = new JungWerkzeug(biggraph.graph());
-		//JungWerkzeug werkzeug2 = new JungWerkzeug(prim.spannbaum());
+		@SuppressWarnings("unused")
+		JungWerkzeug werkzeug1 = new JungWerkzeug(biggraph.graph());
+		@SuppressWarnings("unused")
+		JungWerkzeug werkzeug2 = new JungWerkzeug(prim.spannbaum());
 	}
 
 }

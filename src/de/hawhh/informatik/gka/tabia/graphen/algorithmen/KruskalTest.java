@@ -9,7 +9,7 @@ import de.hawhh.informatik.gka.tabia.graphen.material.BigGraph;
 public class KruskalTest
 {
 	@Test
-	public void testKruskal()
+	public void testKruskal_Prim()
 	{
 		BigGraph biggraph = new BigGraph("#attributed #weighted", 10, 20);
 		biggraph.generateGraph();

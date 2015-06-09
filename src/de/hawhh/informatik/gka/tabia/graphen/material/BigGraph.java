@@ -73,8 +73,13 @@ public class BigGraph
 		// ----------------------
 		for (int i = 1; i <= kantenAnzahl; i++)
 		{
-			MyOwnVertex a = getRandomVertex();
-			MyOwnVertex b = getRandomVertex();
+			MyOwnVertex a;
+			MyOwnVertex b;
+			do
+			{
+				a = getRandomVertex();
+				b = getRandomVertex();
+			} while (graph.getMygraph().findEdge(a, b) != null);
 			int gewicht;
 			// Das Gewicht der Kante hängt von der größten Heuristic der beiden Knoten ab
 			if (a.getAttribute() < b.getAttribute())

@@ -4,16 +4,19 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.jgrapht.util.FibonacciHeap;
+import org.jgrapht.util.FibonacciHeapNode;
 
 import de.hawhh.informatik.gka.tabia.graphen.material.BigGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnEdge;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 import de.hawhh.informatik.gka.tabia.graphen.service.Laufzeit;
+import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 
 public class PrimFibo
 {
@@ -28,9 +31,12 @@ public class PrimFibo
 	private int _verticesCount;
 	private Map<MyOwnVertex, Integer> distance; // Die Entfernung vom Source zum Target
 	private Map<MyOwnVertex, MyOwnVertex> predecessor; // Target - Source
+	private Map<MyOwnVertex,FibonacciHeapNode<MyOwnVertex>> verticesInFiboHeap;
 
 	public PrimFibo(JungGraph graph)
 	{
+		assert graph != null : "Vorbedingung verletzt: graph != null";
+		
 		_originGraph = graph;
 		_verticesCount = _originGraph.getMygraph().getVertexCount();
 		distance = new HashMap<>();
@@ -39,6 +45,7 @@ public class PrimFibo
 		laufzeit = new Laufzeit();
 		selectedKnoten = new HashSet<MyOwnVertex>();
 		predecessor = new HashMap<>();
+		verticesInFiboHeap = new LinkedHashMap<>();
 	}
 	// Eigene Klasse für das Sortieren in der Queue
     public class NodeCompator implements Comparator<MyOwnVertex>  
@@ -61,6 +68,7 @@ public class PrimFibo
 	{
 		int i = (int) (Math.random() * (_verticesCount - 0) + 0);
 		Object[] array = _originGraph.vertexSet().toArray();
+		assert array[i] != null : "Vorbedingung verletzt: array[i] != null";
 		return (MyOwnVertex) array[i];
 	}
     
@@ -71,13 +79,12 @@ public class PrimFibo
 		
 		distance.put(start, 0); // setze die Entfernung vom Start auf 0
 		predecessor.put(start, start); // Nachfolger
-		// TODO queue.offer(start);
+		insertNodeToFiboHeap(start);
 		selectedKnoten.add(start); // markiere start als besuchter Knoten
 
 		while (!fiboheap.isEmpty())
 		{
-			MyOwnVertex source = fiboheapMin();
-			fiboheap.removeMin();
+			MyOwnVertex source = deleteMin();
 			selectedKnoten.add(source);
 			// Gibt alle Benachbarten vom Source
 			Collection<MyOwnVertex> neighbors = _originGraph.getMygraph().getNeighbors(source);
@@ -94,26 +101,57 @@ public class PrimFibo
 					predecessor.put(target, source);
 				}
 								
-				//TODO if (!fiboheap.contains(target)) fiboheap.insert(target);
+				if (!verticesInFiboHeap.containsKey(target)) 
+					insertNodeToFiboHeap(target);
 				else
-				{
-					// TODO queue.remove(target);
-					// TODO queue.offer(target);
-				}
+					decreaseKey(target);
 			}
 		}
 		laufzeit.stop();
 		erstelleSpannBaum();
 	}
 
-	private MyOwnVertex fiboheapMin()
+	private MyOwnVertex deleteMin()
 	{
-		//TODO
-		return null;
+		MyOwnVertex node = fiboheap.removeMin().getData();
+		assert node != null : "Vorbedingung verletzt: node != null";
+		
+		verticesInFiboHeap.remove(node);
+		return node;
 	}
+	
+    public void insertNodeToFiboHeap(MyOwnVertex node) 
+    {
+    	assert node != null : "Vorbedingung verletzt: node != null";
+    	assert distance.get(node) != null : "Vorbedingung verletzt: distance.get(node) != null";
+    	
+        int key = distance.get(node);
+        FibonacciHeapNode<MyOwnVertex> fiboheapnode = new FibonacciHeapNode<MyOwnVertex>(node);
+        
+        assert fiboheapnode != null : "Vorbedingung verletzt: fiboheapnode != null";
+        
+    	verticesInFiboHeap.put(node,fiboheapnode);
+        fiboheap.insert(fiboheapnode, key);
+    }
+    
+    public void decreaseKey(MyOwnVertex node)
+    {	
+    	assert node != null : "Vorbedingung verletzt: node != null";
+    	assert distance.get(node) != null : "Vorbedingung verletzt: distance.get(node) != null";
+    	
+    	int key = distance.get(node);
+    	FibonacciHeapNode<MyOwnVertex> fibonode = verticesInFiboHeap.get(node);
+    	
+    	assert fibonode != null : "Vorbedingung verletzt: fibonode != null";
+    	
+    	fiboheap.decreaseKey(fibonode, key);
+    }
 
 	public MyOwnEdge minimalEdge(MyOwnVertex v1, MyOwnVertex v2)
 	{
+		assert v1 != null : "Vorbedingung verletzt: v1 != null";
+		assert v2 != null : "Vorbedingung verletzt: v2 != null";
+		
 		MyOwnEdge smallestEdge = null;
 		Collection<MyOwnEdge> edgeset = _originGraph.getMygraph().findEdgeSet(v1, v2);
 		
@@ -132,35 +170,43 @@ public class PrimFibo
 		for (MyOwnVertex v : selectedKnoten)
 		{
 			MyOwnVertex source = predecessor.get(v);
-			if (source!=null)
-			_spannbaum.kanteEinfuegen(predecessor.get(v), v, distance.get(v));
+			if (source!=null && !v.equals(source))
+			{
+				kantenGewichtSumme += distance.get(v);
+				_spannbaum.kanteEinfuegen(predecessor.get(v), v, distance.get(v));
+			}
 		}
 	}
 	public JungGraph spannbaum()
 	{
+		assert _spannbaum != null : "Vorbedingung verletzt: _s != null";
 		return _spannbaum;
 	}
 	
-	public int getKantenGewichtSumme()
+	public int kantenGewichtSumme()
 	{
+		assert kantenGewichtSumme >= 0 : "Vorbedingung verletzt: kantenGewichtSumme >= 0";
 		return kantenGewichtSumme;
 	}
 	
 	public Laufzeit laufzeit()
 	{
+		assert laufzeit != null : "Vorbedingung verletzt: laufzeit != null";
 		return laufzeit;
 	}
 
 	public static void main(String[] args)
 	{
-		BigGraph biggraph = new BigGraph("#attributed #weighted", 10000, 20000);
+		BigGraph biggraph = new BigGraph("#attributed #weighted", 10, 30);
 		biggraph.generateGraph();
 		//biggraph.show();
 		PrimFibo prim = new PrimFibo(biggraph.graph());
 		prim.start();
 		System.out.println(prim.laufzeit().toString());
-		//JungWerkzeug werkzeug1 = new JungWerkzeug(biggraph.graph());
-		//JungWerkzeug werkzeug2 = new JungWerkzeug(prim.spannbaum());
+		@SuppressWarnings("unused")
+		JungWerkzeug werkzeug1 = new JungWerkzeug(biggraph.graph());
+		@SuppressWarnings("unused")
+		JungWerkzeug werkzeug2 = new JungWerkzeug(prim.spannbaum());
 	}
 
 }

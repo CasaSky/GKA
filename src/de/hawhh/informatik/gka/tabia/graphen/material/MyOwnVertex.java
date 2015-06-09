@@ -6,17 +6,17 @@ public class MyOwnVertex
     private int attribute;
     private boolean withattribute;
     private int kantenGewicht;
-	private int omega = Integer.MAX_VALUE;
     
 	public MyOwnVertex()
     {}
     
     public MyOwnVertex(String name, int attribute) 
     {
+    	assert name != null : "Vorbedingung verletzt: name != null";
+    	assert attribute >= 0 : "Vorbedingung verletzt: attribute >= 0";
         this.name = name;
         this.attribute = attribute;
         this.withattribute = true;
-       // this.kantenGewicht = omega;
     }
     
     public MyOwnVertex(String name, int attribute, int kantenGewicht) 
@@ -24,7 +24,6 @@ public class MyOwnVertex
         this.name = name;
         this.attribute = attribute;
         this.withattribute = true;
-       // this.kantenGewicht = kantenGewicht;
     }
     
     public MyOwnVertex(String name) 
