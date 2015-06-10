@@ -11,6 +11,9 @@ import java.util.Collection;
 import javax.swing.JOptionPane;
 
 import de.hawhh.informatik.gka.tabia.graphen.algorithmen.Dijkstra;
+import de.hawhh.informatik.gka.tabia.graphen.algorithmen.Kruskal;
+import de.hawhh.informatik.gka.tabia.graphen.algorithmen.Prim;
+import de.hawhh.informatik.gka.tabia.graphen.algorithmen.PrimFibo;
 import de.hawhh.informatik.gka.tabia.graphen.daten.DateiManager;
 import de.hawhh.informatik.gka.tabia.graphen.material.BigGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
@@ -26,7 +29,10 @@ public class JungWerkzeug
 	private DateiManager dateimanager;
 	private PickedState<MyOwnVertex> pickedState;
 	private JungUI ui;
-	Dijkstra di;
+	private Dijkstra di;
+	private Kruskal kruskal;
+	private Prim prim;
+	private PrimFibo primFibo;
 	
 	public JungWerkzeug(String pfad)
 	{
@@ -58,12 +64,12 @@ public class JungWerkzeug
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	// Übergabe der erzeugten Liste
+	// ï¿½bergabe der erzeugten Liste
 	listVE=dateimanager.getList();
 	
 	// Erstellung des Graphen nach der gegebenen Referenz
     sgv = new JungGraph(dateimanager.getGraphReference());
-    // Füge die Knoten und Kanten aus der listVE in den Graphen
+    // Fï¿½ge die Knoten und Kanten aus der listVE in den Graphen
     sgv.listToGraph(listVE);
 	}
 	
@@ -103,7 +109,7 @@ public class JungWerkzeug
 				public void actionPerformed(ActionEvent e)
 				{
 					if(dijktra())
-						JOptionPane.showMessageDialog(null, "Ok! Der kürzeste Weg ist: "+di.shortPath());
+						JOptionPane.showMessageDialog(null, "Ok! Der kï¿½rzeste Weg ist: "+di.shortPath());
 					else
 						JOptionPane.showMessageDialog(null, "Sorry");
 				}
@@ -114,7 +120,7 @@ public class JungWerkzeug
 				public void actionPerformed(ActionEvent e)
 				{
 					if(bigGraph())
-						JOptionPane.showMessageDialog(null, "Ok! Der kürzeste Weg ist: "+di.shortPath());
+						JOptionPane.showMessageDialog(null, "Ok! Der kï¿½rzeste Weg ist: "+di.shortPath());
 					else
 						JOptionPane.showMessageDialog(null, "Sorry, Es gibt keinen Weg !");
 				}
@@ -129,6 +135,42 @@ public class JungWerkzeug
 					bigGraph.createFiveGraphs();
 				}
 			});
+		    
+		    ui.getKruskalItem().addActionListener( new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    kruskal = new Kruskal(sgv);
+                    kruskal.start();
+                    new JungWerkzeug(kruskal.minimalgeruest());
+                    JOptionPane.showMessageDialog(null, "Laufzeit: "+kruskal.laufzeit()+"\nKantengewicht Summe: "+kruskal.kantenGewichtSumme());
+                }
+            });
+		    
+		    ui.getPrimNormalItem().addActionListener( new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    prim = new Prim(sgv);
+                    prim.start();
+                    new JungWerkzeug(prim.spannbaum());
+                    JOptionPane.showMessageDialog(null, "Laufzeit: "+prim.laufzeit()+"\nKantengewicht Summe: "+prim.kantenGewichtSumme());
+                }
+            });
+ 
+             ui.getPrimFibItem().addActionListener( new ActionListener() {
+                 
+                 @Override
+                 public void actionPerformed(ActionEvent e)
+                 {
+                     primFibo = new PrimFibo(sgv);
+                     primFibo.start();
+                     new JungWerkzeug(primFibo.spannbaum());
+                     JOptionPane.showMessageDialog(null, "Laufzeit: "+primFibo.laufzeit()+"\nKantengewicht Summe: "+primFibo.kantenGewichtSumme());
+                 }
+             });
 		    
 		    ui.getChooseFileItem().addActionListener( new ActionListener() {
 				

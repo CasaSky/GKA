@@ -39,6 +39,9 @@ public class JungUI
 	private JMenuItem disjktraItem;
 	private JMenuItem bigGraphItem;
 	private JMenuItem createFiveGraphsItem;
+	private JMenuItem kruskalItem;
+	private JMenuItem primNormalItem;
+	private JMenuItem primFibItem;
 	private String[] bspStrings = { "bsp1", "bsp2", "bsp3", "bsp4", "bsp5", "bsp6" };
 	private JComboBox<String> graphFiles = new JComboBox<>(bspStrings);
 	
@@ -50,7 +53,7 @@ public class JungUI
 
 	public void erstelleLayout(JungGraph sgv)
 	{
-	    // Layout erstellen und den Graphen übergeben
+	    // Layout erstellen und den Graphen ï¿½bergeben
         layout = new CircleLayout<MyOwnVertex, MyOwnEdge>(sgv.getMygraph());
         layout.setSize(new Dimension(500,500));
         vv = 
@@ -109,7 +112,13 @@ public class JungUI
         bigGraphItem = new JMenuItem("Big Graph");
         optionMenu.add(bigGraphItem);
         createFiveGraphsItem = new JMenuItem("Create Five Graphs");
-        optionMenu.add(createFiveGraphsItem);
+        optionMenu.add(createFiveGraphsItem);       
+        kruskalItem = new JMenuItem("Kruskal Starten");
+        optionMenu.add(kruskalItem);
+        primNormalItem = new JMenuItem("Prim ohne Fib Starten");
+        optionMenu.add(primNormalItem);      
+        primFibItem = new JMenuItem("Prim mit Fib Starten");    
+        optionMenu.add(primFibItem);
         menuBar.add(optionMenu);
         frame.setJMenuBar(menuBar);
         gm.setMode(ModalGraphMouse.Mode.PICKING); // Start off in picking mode
@@ -131,6 +140,21 @@ public class JungUI
 	{
 		return bigGraphItem;
 	}
+	
+	public JMenuItem getKruskalItem()
+    {
+        return kruskalItem;
+    }
+	
+	public JMenuItem getPrimNormalItem()
+    {
+        return primNormalItem;
+    }
+	
+	public JMenuItem getPrimFibItem()
+    {
+        return primFibItem;
+    }
 	
 	public JComboBox<String> getGraphFiles()
 	{
