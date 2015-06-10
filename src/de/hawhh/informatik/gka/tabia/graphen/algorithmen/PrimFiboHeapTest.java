@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import de.hawhh.informatik.gka.tabia.graphen.material.BigGraph;
 
-public class PrimFiboTest
+public class PrimFiboHeapTest
 {
 
 	@Test
@@ -14,7 +14,7 @@ public class PrimFiboTest
 	{
 		BigGraph biggraph = new BigGraph("#attributed #weighted", 100, 600);
 		biggraph.generateGraph();
-		PrimFibo primfibo = new PrimFibo(biggraph.graph());
+		PrimFiboHeap primfibo = new PrimFiboHeap(biggraph.graph());
 		primfibo.start();
 		Prim prim = new Prim(biggraph.graph());
 		prim.start();
@@ -26,7 +26,7 @@ public class PrimFiboTest
 	{
 		BigGraph biggraph = new BigGraph("#attributed #weighted", 1000, 6000);
 		biggraph.generateGraph();
-		PrimFibo primfibo = new PrimFibo(biggraph.graph());
+		PrimFiboHeap primfibo = new PrimFiboHeap(biggraph.graph());
 		primfibo.start();
 		Prim prim = new Prim(biggraph.graph());
 		prim.start();
@@ -38,7 +38,7 @@ public class PrimFiboTest
 	{
 		BigGraph biggraph = new BigGraph("#attributed #weighted", 10000, 60000);
 		biggraph.generateGraph();
-		PrimFibo primfibo = new PrimFibo(biggraph.graph());
+		PrimFiboHeap primfibo = new PrimFiboHeap(biggraph.graph());
 		primfibo.start();
 		Prim prim = new Prim(biggraph.graph());
 		prim.start();

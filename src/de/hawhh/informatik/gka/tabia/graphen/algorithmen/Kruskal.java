@@ -68,7 +68,7 @@ public class Kruskal
 		System.out.println(kruskal.laufzeit().toString());
 		//JungWerkzeug werkzeug1 = new JungWerkzeug(biggraph.graph());
 		//JungWerkzeug werkzeug2 = new JungWerkzeug(kruskal._minimalgeruest);
-		System.out.println(kruskal.kantenGewichtSumme());
+		System.out.println("Kantengewichtsumme: "+kruskal.kantenGewichtSumme());
 	}
 	public JungGraph minimalgeruest()
 	{

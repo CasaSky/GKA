@@ -18,7 +18,7 @@ import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 import de.hawhh.informatik.gka.tabia.graphen.service.Laufzeit;
 import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 
-public class PrimFibo
+public class PrimFiboHeap
 {
 
 	private JungGraph _originGraph;
@@ -33,7 +33,7 @@ public class PrimFibo
 	private Map<MyOwnVertex, MyOwnVertex> predecessor; // Target - Source
 	private Map<MyOwnVertex,FibonacciHeapNode<MyOwnVertex>> verticesInFiboHeap;
 
-	public PrimFibo(JungGraph graph)
+	public PrimFiboHeap(JungGraph graph)
 	{
 		assert graph != null : "Vorbedingung verletzt: graph != null";
 		
@@ -200,7 +200,7 @@ public class PrimFibo
 		BigGraph biggraph = new BigGraph("#attributed #weighted", 10, 30);
 		biggraph.generateGraph();
 		//biggraph.show();
-		PrimFibo prim = new PrimFibo(biggraph.graph());
+		PrimFiboHeap prim = new PrimFiboHeap(biggraph.graph());
 		prim.start();
 		System.out.println(prim.laufzeit().toString());
 		@SuppressWarnings("unused")
