@@ -1,7 +1,6 @@
 package de.hawhh.informatik.gka.tabia.graphen.algorithmen;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -20,7 +19,6 @@ import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 
 public class PrimFiboHeap
 {
-
 	private JungGraph _originGraph;
 	private JungGraph _spannbaum;
 	private int kantenGewichtSumme=0;
@@ -36,6 +34,7 @@ public class PrimFiboHeap
 	public PrimFiboHeap(JungGraph graph)
 	{
 		assert graph != null : "Vorbedingung verletzt: graph != null";
+		assert ZusammenGewichtet.istzusammenUndGewichtet(graph) == true : "Vorbedingung verletzt: graph ist nicht zusammenhängend!";
 		
 		_originGraph = graph;
 		_verticesCount = _originGraph.getMygraph().getVertexCount();
@@ -47,23 +46,7 @@ public class PrimFiboHeap
 		predecessor = new HashMap<>();
 		verticesInFiboHeap = new LinkedHashMap<>();
 	}
-	// Eigene Klasse für das Sortieren in der Queue
-    public class NodeCompator implements Comparator<MyOwnVertex>  
-    {
-    	Map<MyOwnVertex, Integer> distance;
-    	public NodeCompator(Map<MyOwnVertex, Integer> distance)
-		{
-    		this.distance = distance;
-		}
-        @Override
-        public int compare(MyOwnVertex o1, MyOwnVertex o2) 
-        {
-        	int v1 = distance.get(o1);
-        	int v2 = distance.get(o2);
-        	return Integer.compare(v1, v2);
-        }
-    };
-    
+	
 	public MyOwnVertex randomKnoten()
 	{
 		int i = (int) (Math.random() * (_verticesCount - 0) + 0);
@@ -79,7 +62,7 @@ public class PrimFiboHeap
 		
 		distance.put(start, 0); // setze die Entfernung vom Start auf 0
 		predecessor.put(start, start); // Nachfolger
-		insertNodeToFiboHeap(start);
+		insertNodeToFiboHeap(start); // Start Knoten in FiboHeap einfügen
 		selectedKnoten.add(start); // markiere start als besuchter Knoten
 
 		while (!fiboheap.isEmpty())
@@ -93,14 +76,16 @@ public class PrimFiboHeap
 				if (selectedKnoten.contains(target)) // wenn ja, wurde schon bearbeitet, nicht nehmen
 					continue;
 				
-				MyOwnEdge e = minimalEdge(source, target);
+				MyOwnEdge e = minimalEdge(source, target); // suche die minimale Kante zwischen Source und Target
 				int kantenGewicht = e.getGewicht();
+				// Wenn Target nicht in distance vorhanden ist, dann fügen wir den ein und source, wenn nicht, es wird geprüft ob sein Distance Value  > als das Kanten Gewicht
 				if (!distance.containsKey(target) || distance.get(target) > kantenGewicht)
 				{
 					distance.put(target, kantenGewicht);
 					predecessor.put(target, source);
 				}
 								
+				// Füge Target nur ein wenn der nicht in dem FiboHeap enthalten ist
 				if (!verticesInFiboHeap.containsKey(target)) 
 					insertNodeToFiboHeap(target);
 				else

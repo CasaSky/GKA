@@ -1,7 +1,6 @@
 package de.hawhh.informatik.gka.tabia.graphen.algorithmen;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,31 +30,17 @@ public class Prim
 	public Prim(JungGraph graph)
 	{
 		assert graph != null : "Vorbedingung verletzt: graph != null";
+		assert ZusammenGewichtet.istzusammenUndGewichtet(graph) == true : "Vorbedingung verletzt: graph ist nicht zusammenhängend!";
+
 		_originGraph = graph;
 		_verticesCount = _originGraph.getMygraph().getVertexCount();
 		distance = new HashMap<>();
-		queue = new PriorityQueue<MyOwnVertex>(new NodeCompator(distance)); // sortiere nach der Entfernung in der Map
+		queue = new PriorityQueue<MyOwnVertex>(new knotenComparator(distance)); // sortiere nach der Entfernung in der Map
 		_spannbaum = new JungGraph(graph.getReferenz());
 		laufzeit = new Laufzeit();
 		selectedKnoten = new HashSet<MyOwnVertex>();
 		predecessor = new HashMap<>();
 	}
-	// Eigene Klasse für das Sortieren in der Queue
-    public class NodeCompator implements Comparator<MyOwnVertex>  
-    {
-    	Map<MyOwnVertex, Integer> distance;
-    	public NodeCompator(Map<MyOwnVertex, Integer> distance)
-		{
-    		this.distance = distance;
-		}
-        @Override
-        public int compare(MyOwnVertex o1, MyOwnVertex o2) 
-        {
-        	int v1 = distance.get(o1);
-        	int v2 = distance.get(o2);
-        	return Integer.compare(v1, v2);
-        }
-    };
     
 	public MyOwnVertex randomKnoten()
 	{
@@ -66,12 +51,12 @@ public class Prim
     
 	public void start()
 	{
+		// ------------ Initialisierung
 		laufzeit.start();
 		start = randomKnoten(); // ein beliebigen Knoten als Start Knoten festlegen
-		
 		distance.put(start, 0); // setze die Entfernung vom Start auf 0
 		predecessor.put(start, start); // Nachfolger
-		queue.offer(start);
+		queue.offer(start);	// Start Knoten in Queue einfügen
 		selectedKnoten.add(start); // markiere start als besuchter Knoten
 
 		while (!queue.isEmpty())
@@ -85,18 +70,21 @@ public class Prim
 				if (selectedKnoten.contains(target)) // wenn ja, wurde schon bearbeitet, nicht nehmen
 					continue;
 				
-				MyOwnEdge e = minimalEdge(source, target);
+				MyOwnEdge e = minimalEdge(source, target); // suche die minimale Kante zwischen Source und Target
 				int kantenGewicht = e.getGewicht();
+				// Wenn Target nicht in distance vorhanden ist, dann fügen wir den ein und source, wenn nicht, es wird geprüft ob sein Distance Value  > als das Kanten Gewicht
 				if (!distance.containsKey(target) || distance.get(target) > kantenGewicht)
 				{	
 					distance.put(target, kantenGewicht);
 					predecessor.put(target, source);
 				}
 								
+				// Füge Target nur ein wenn der nicht in der Queue enthalten ist
 				if (!queue.contains(target))
 					queue.offer(target);
 				else
 				{
+					// Fals vorhanden, denn löschen und neu einfügen
 					queue.remove(target);
 					queue.offer(target);
 				}

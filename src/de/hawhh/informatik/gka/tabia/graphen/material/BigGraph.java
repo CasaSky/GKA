@@ -92,8 +92,7 @@ public class BigGraph
 			
 			// Fügt eine Kante zwischen zwei zufälligen Knoten und das geschätzte Gewicht ein
 			graph.kanteEinfuegen(a,b , gewicht);
-		}
-		
+		}	
 	}
 	
 	// Holt einen zufälligen Knoten aus dem Graphen

@@ -42,6 +42,7 @@ public class JungUI
 	private JMenuItem kruskalItem;
 	private JMenuItem primNormalItem;
 	private JMenuItem primFibItem;
+	private JMenuItem alleAlgorithmen;
 	private String[] bspStrings = { "bsp1", "bsp2", "bsp3", "bsp4", "bsp5", "bsp6" };
 	private JComboBox<String> graphFiles = new JComboBox<>(bspStrings);
 	
@@ -119,6 +120,8 @@ public class JungUI
         optionMenu.add(primNormalItem);      
         primFibItem = new JMenuItem("Prim mit Fib Starten");    
         optionMenu.add(primFibItem);
+        alleAlgorithmen = new JMenuItem("Alle 3 Algorithmen Starten");    
+        optionMenu.add(alleAlgorithmen);
         menuBar.add(optionMenu);
         frame.setJMenuBar(menuBar);
         gm.setMode(ModalGraphMouse.Mode.PICKING); // Start off in picking mode
@@ -169,6 +172,11 @@ public class JungUI
 	public JMenuItem getChooseFileItem()
 	{
 		return chooseFileItem;
+	}
+
+	public JMenuItem getAlleAlgorithmen()
+	{
+		return alleAlgorithmen;
 	}
 }
 

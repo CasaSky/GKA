@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import de.hawhh.informatik.gka.tabia.graphen.algorithmen.Dijkstra;
 import de.hawhh.informatik.gka.tabia.graphen.algorithmen.Kruskal;
 import de.hawhh.informatik.gka.tabia.graphen.algorithmen.Prim;
-import de.hawhh.informatik.gka.tabia.graphen.algorithmen.PrimFibo;
+import de.hawhh.informatik.gka.tabia.graphen.algorithmen.PrimFiboHeap;
 import de.hawhh.informatik.gka.tabia.graphen.daten.DateiManager;
 import de.hawhh.informatik.gka.tabia.graphen.material.BigGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
@@ -32,7 +32,7 @@ public class JungWerkzeug
 	private Dijkstra di;
 	private Kruskal kruskal;
 	private Prim prim;
-	private PrimFibo primFibo;
+	private PrimFiboHeap primFibo;
 	
 	public JungWerkzeug(String pfad)
 	{
@@ -119,10 +119,13 @@ public class JungWerkzeug
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					if(bigGraph())
-						JOptionPane.showMessageDialog(null, "Ok! Der k�rzeste Weg ist: "+di.shortPath());
-					else
-						JOptionPane.showMessageDialog(null, "Sorry, Es gibt keinen Weg !");
+					//if(bigGraph())
+						//JOptionPane.showMessageDialog(null, "Ok! Der k�rzeste Weg ist: "+di.shortPath());
+					//else
+						//JOptionPane.showMessageDialog(null, "Sorry, Es gibt keinen Weg !");
+					bigGraph();
+					JOptionPane.showMessageDialog(null, "Big Graph wurde erstellt!");
+					
 				}
 			});
 		    
@@ -165,12 +168,31 @@ public class JungWerkzeug
                  @Override
                  public void actionPerformed(ActionEvent e)
                  {
-                     primFibo = new PrimFibo(sgv);
+                     primFibo = new PrimFiboHeap(sgv);
                      primFibo.start();
                      new JungWerkzeug(primFibo.spannbaum());
                      JOptionPane.showMessageDialog(null, "Laufzeit: "+primFibo.laufzeit()+"\nKantengewicht Summe: "+primFibo.kantenGewichtSumme());
                  }
              });
+             
+             ui.getAlleAlgorithmen().addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					kruskal = new Kruskal(sgv);
+					prim = new Prim(sgv);
+					primFibo = new PrimFiboHeap(sgv);
+					kruskal.start();
+					prim.start();
+					primFibo.start();
+					JOptionPane.showMessageDialog(null, "Kruskal Laufzeit: "+kruskal.laufzeit()+" Kruskal Kantengewichtsumme: "+kruskal.kantenGewichtSumme()+
+							
+													"\nPrim Laufzeit: "+prim.laufzeit()+ " Prim Kantengewichtsumme: "+prim.kantenGewichtSumme()+
+													"\nPrim Fibonacci Heap Laufzeit: "+primFibo.laufzeit()+" Prim Fibonacci Heap Kantengewichtsumme: "+primFibo.kantenGewichtSumme());
+					
+				}
+			});
 		    
 		    ui.getChooseFileItem().addActionListener( new ActionListener() {
 				
@@ -203,24 +225,25 @@ public class JungWerkzeug
 		 return di.start();
 	 }
 	 
-	 public boolean bigGraph()
+	 public void bigGraph()
 	 {
 			int maxKnoten = Integer.parseInt(JOptionPane.showInputDialog(null, "Geben Sie die Knoten Anzahl ein: "));
 			int maxKanten = Integer.parseInt(JOptionPane.showInputDialog(null, "Geben Sie die Kanten Anzahl ein: "));
 			BigGraph big = new BigGraph("#undirected", maxKnoten, maxKanten);
 			big.generateGraph();
-			big.show();
-			MyOwnVertex target = new MyOwnVertex("0",0);
-			Collection<MyOwnVertex> next = big.graph().getMygraph().getNeighbors(target); 
-			Object[] array = next.toArray();
-			if (array.length!=0)
-			{
-			MyOwnVertex source = ((MyOwnVertex) array[0]);
-			di = new Dijkstra(big.graph(), source, target);
-			boolean found = di.start();
-			return found;
-			}
-			else
-				return false;
+			//big.show();
+			sgv = big.graph();
+//			MyOwnVertex target = new MyOwnVertex("0",0);
+//			Collection<MyOwnVertex> next = big.graph().getMygraph().getNeighbors(target); 
+//			Object[] array = next.toArray();
+//			if (array.length!=0)
+//			{
+//			MyOwnVertex source = ((MyOwnVertex) array[0]);
+			//di = new Dijkstra(big.graph(), source, target);
+			//boolean found = di.start();
+			//return found;
+			//}
+			//else
+				//return false;
 	 }
 }

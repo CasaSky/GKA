@@ -21,6 +21,8 @@ public class Kruskal
 	public Kruskal(JungGraph graph)
 	{
 		assert graph != null : "Vorbedingung verletzt: graph != null";
+		assert ZusammenGewichtet.istzusammenUndGewichtet(graph) : "Vorbedingung verletzt: graph ist nicht zusammenhängend!";
+
 		_originGraph = graph;
 		_kantenSet = new LinkedList<>(_originGraph.edgeSet());
 		Collections.sort(_kantenSet, new kantenComparator());
