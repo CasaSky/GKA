@@ -1,0 +1,16 @@
+
+ Es gibt keinen Weg bei Graph 1
+Dijktra ShortPath: [60:60, 0:0] A* ShortPath: [60:60, 0:0]
+ Dijktra Length: 79 A* Length: 79
+ Dijktra Counter: 2 A* Counter: 2
+ ------------------------------------------------
+Dijktra ShortPath: [9:9, 0:0] A* ShortPath: [9:9, 0:0]
+ Dijktra Length: 15 A* Length: 15
+ Dijktra Counter: 2 A* Counter: 2
+ ------------------------------------------------
+Es gibt keinen Weg bei Graph 4
+Dijktra ShortPath: [89:89, 0:0] A* ShortPath: [89:89, 0:0]
+ Dijktra Length: 135 A* Length: 135
+ Dijktra Counter: 2 A* Counter: 2
+ ------------------------------------------------
+

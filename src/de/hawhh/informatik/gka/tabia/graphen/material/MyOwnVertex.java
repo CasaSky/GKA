@@ -48,6 +48,7 @@ public class MyOwnVertex
         return result;
     }
     
+    @Override
     public boolean equals(Object o)
     {
     	if (o instanceof MyOwnVertex) {
@@ -90,5 +91,6 @@ public class MyOwnVertex
 	{
 		this.kantenGewicht = kantenGewicht;
 	}
+	
 	
 }

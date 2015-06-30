@@ -18,6 +18,11 @@ public class JungGraph
 		mygraph = erstelleGraphNachReferenz(this.referenz);
 	}
 	
+	public int grad(MyOwnVertex v)
+	{
+		return mygraph.degree(v);
+	}
+	
 	//fügt einen Knoten an dem Graphen hinzu
 	public void knotenEinfuegen(String name, int attribute)
 	{
@@ -100,6 +105,11 @@ public class JungGraph
 	public Collection<MyOwnEdge> edgeSet()
 	{
 		return mygraph.getEdges();
+	}
+	
+	public boolean containsEdge(MyOwnEdge edge)
+	{
+		return mygraph.containsEdge(edge);
 	}
 	
 	public String getReferenz()

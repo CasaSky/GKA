@@ -231,7 +231,7 @@ public class JungWerkzeug
 			int maxKanten = Integer.parseInt(JOptionPane.showInputDialog(null, "Geben Sie die Kanten Anzahl ein: "));
 			BigGraph big = new BigGraph("#undirected", maxKnoten, maxKanten);
 			big.generateGraph();
-			//big.show();
+			big.show();
 			sgv = big.graph();
 //			MyOwnVertex target = new MyOwnVertex("0",0);
 //			Collection<MyOwnVertex> next = big.graph().getMygraph().getNeighbors(target); 
