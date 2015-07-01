@@ -28,12 +28,22 @@ public final class Eulerkreis
 		// Voraussetzung : der Graph soll mindestens eine Eulertour haben sollen
 		if (hatEulertour(graph))
 		{
+<<<<<<< HEAD
 		int size = kantenFolge.size(); 		// Länge der KantenFolge
 		// Die KantenFolge soll jede Kante des Graphen nur einmal enthalten
 		if (size == graph.edgeSet().size())
 		{
 			return connected(kantenFolge);
 		}
+=======
+			int size = kantenFolge.size(); 		// Länge der KantenFolge
+			// Die KantenFolge soll jede Kante des Graphen nur einmal enthalten
+			if (size == graph.edgeSet().size())
+			{
+				System.out.println("passt");
+				return connected(kantenFolge);
+			}
+>>>>>>> origin/master
 		}
 		return false;
 	}
