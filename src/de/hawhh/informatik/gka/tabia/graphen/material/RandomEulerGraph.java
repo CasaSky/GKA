@@ -58,7 +58,7 @@ public class RandomEulerGraph
 	{
 		for (int i=1; i<= maxKnoten; i++)
 		{
-			graph.knotenEinfuegen(""+i,1);
+			graph.knotenEinfuegen(""+i);
 		}
 		// das Target
 		//graph.knotenEinfuegen("0", 0);
@@ -88,7 +88,7 @@ public class RandomEulerGraph
 				ungeradeKnoten.add(v);
 			}
 		}
-		System.out.println(ungeradeKnoten);
+		//System.out.println(ungeradeKnoten);
 		return ungeradeKnoten;
 	}
 	

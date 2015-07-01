@@ -1,21 +1,26 @@
 package de.hawhh.informatik.gka.tabia.graphen.algorithmen;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import de.hawhh.informatik.gka.tabia.graphen.material.Eulerkreis;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnEdge;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
+import de.hawhh.informatik.gka.tabia.graphen.material.RandomEulerGraph;
 
 
 public class Fleury
 {
 	private JungGraph graph;
-	private HashSet<MyOwnEdge> visitedEdges;
+	private List<MyOwnEdge> visitedEdges;
 	private MyOwnVertex start;
 	private Queue<MyOwnVertex> queue;
 	//private JungGraph eulertour;
@@ -23,7 +28,7 @@ public class Fleury
 	public Fleury(JungGraph graph)
 	{
 		this.graph = graph;
-		this.visitedEdges = new HashSet<MyOwnEdge>();
+		this.visitedEdges = new LinkedList<MyOwnEdge>();
 		this.queue = new LinkedList<>();
 		//this.eulertour = new JungGraph("#undirected");
 	}
@@ -106,12 +111,12 @@ public class Fleury
 			visitedEdges.add(e);
 						
 			MyOwnVertex target;
-			if (e.target() != source)
+			if (!e.target().equals(source))
 				target = e.target();
 			else
 					target = e.source();
 			//eulertour.kanteEinfuegen(source, target, 0);
-			System.out.println("Source: "+source+"Target: "+target);
+			//System.out.println("Source: "+source+"Target: "+target);
 
 			queue.offer(target);
 		}
@@ -156,8 +161,19 @@ public class Fleury
 //		return eulertour;
 //	}
 
-	public HashSet<MyOwnEdge> getVisitedEdges()
+	public List<MyOwnEdge> getVisitedEdges()
 	{
 		return visitedEdges;
+	}
+	
+	public static void main(String[] args)
+	{
+		RandomEulerGraph randomGraph = new RandomEulerGraph("#undirected", 8);
+		randomGraph.generateGraph();
+		randomGraph.show();
+		Fleury fleury = new Fleury(randomGraph.graph());
+		fleury.start();
+		List<MyOwnEdge> kantenFolge = new LinkedList<>(fleury.getVisitedEdges());
+		System.out.println(kantenFolge);
 	}
 }

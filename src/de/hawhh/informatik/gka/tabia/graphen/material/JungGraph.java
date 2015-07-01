@@ -126,4 +126,10 @@ public class JungGraph
 	{
 		return mygraph.getVertices();
 	}
+
+	public void knotenEinfuegen(String string)
+	{
+		mygraph.addVertex(new MyOwnVertex(string));
+		
+	}
 }

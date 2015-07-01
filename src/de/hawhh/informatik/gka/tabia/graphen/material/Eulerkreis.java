@@ -32,7 +32,6 @@ public final class Eulerkreis
 		// Die KantenFolge soll jede Kante des Graphen nur einmal enthalten
 		if (size == graph.edgeSet().size())
 		{
-			System.out.println("passt");
 			return connected(kantenFolge);
 		}
 		}
@@ -49,7 +48,7 @@ public final class Eulerkreis
 		MyOwnVertex t1 = startEdge.target();
 		MyOwnVertex s2 = finishEdge.source();
 		MyOwnVertex t2 = finishEdge.target();
-		System.out.println("A "+s1.getName()+" B "+t1.getName()+" C "+s2.getName()+" D "+t2.getName());
+		System.out.println(" A "+s1.getName()+" B "+t1.getName()+" C "+s2.getName()+" D "+t2.getName());
 		return (s1.equals(s2) || s1.equals(t2)) || (t1.equals(s2) || t1.equals(t2));
 	}
 }
