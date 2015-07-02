@@ -1,7 +1,7 @@
 package de.hawhh.informatik.gka.tabia.graphen.algorithmen;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -10,114 +10,76 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import de.hawhh.informatik.gka.tabia.graphen.material.Eulerkreis;
+import de.hawhh.informatik.gka.tabia.graphen.material.EulerkreisProperties;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnEdge;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 import de.hawhh.informatik.gka.tabia.graphen.material.RandomEulerGraph;
+import de.hawhh.informatik.gka.tabia.graphen.service.Random;
 
-
+// Eingabe EulerGraph
+// Ausgabe Eulerkreis als Kanten Folge
 public class Fleury
 {
 	private JungGraph graph;
-	private List<MyOwnEdge> visitedEdges;
+	private List<MyOwnEdge> delEdges;
 	private MyOwnVertex start;
 	private Queue<MyOwnVertex> queue;
-	//private JungGraph eulertour;
 	
 	public Fleury(JungGraph graph)
 	{
+		assert EulerkreisProperties.istZusammenHaengend(graph) : "Vorbedingung verletzt: Eulerkreis";
 		this.graph = graph;
-		this.visitedEdges = new LinkedList<MyOwnEdge>();
+		this.delEdges = new LinkedList<MyOwnEdge>();
 		this.queue = new LinkedList<>();
-		//this.eulertour = new JungGraph("#undirected");
 	}
-	
-	// Generiert eine Random Number zwichen min und max
-	public int generateRandomNumber(int max, int min)
-	{
-		return (int) (Math.random() * (max - min) + min);
-	}
-	
-	public MyOwnVertex getRandomStart()
-	{
-
-		Object[] array = graph.getVertices().toArray();
-		int randomIndex;
-		MyOwnVertex target;
-		randomIndex = generateRandomNumber(graph.getVertices().size(),1);
-		target = (MyOwnVertex) array[randomIndex-1];
-		return target;
-	}
-	
-	// Ergibt eine Kante zurückt, die ausgehend von einem Knoten, wobei der Graph noch immer verbunden bleibt, wenn die entfernt wird
-	public MyOwnEdge getIncidentEdge(MyOwnVertex source)
-	{
-		MyOwnEdge incidentEdge = null;
-		Collection<MyOwnEdge> edges = graph.getMygraph().getOutEdges(source);
-		MyOwnVertex target;
-		for (MyOwnEdge e : edges)
-		{
-			if (e.target()!=source)
-				target = e.target();
-			else 
-				target = e.source();
-			if (!advancedBFS(target, start, e))
-				continue;
-			incidentEdge = e;
-			break;
-		}
-		if (incidentEdge==null)
-			System.out.println("Edge: null");
-
-		else
-		System.out.println("Edge: "+incidentEdge.getGewicht());
-		return incidentEdge;
-	}
-	
+		
 	public void start()
 	{
+		if (!EulerkreisProperties.hatEulertour(graph)) return;
+		
 		start = getRandomStart();
 		queue.offer(start);
-		System.out.println(start.getName());
+		
 		while(!queue.isEmpty())
 		{
 			MyOwnVertex source = queue.poll();
 			// Outgoing Edge-Set
-			Collection<MyOwnEdge> outgouingEdges = new LinkedHashSet<>(graph.getMygraph().getOutEdges(source));
+			Collection<MyOwnEdge> outgouingEdges = new LinkedHashSet<>(graph.getOutEdges(source));
 			// Existing Edge-Set = {Outgoing Edge-Set} \ {Deleted Edge-Set}
-			outgouingEdges.removeAll(visitedEdges);
+			outgouingEdges.removeAll(delEdges);
 			
 			MyOwnEdge e = null;
-			if(outgouingEdges.size() > 1){
-				for(MyOwnEdge aEdge : outgouingEdges){
+			if(outgouingEdges.size() > 1)
+			{
+				for(MyOwnEdge edge : outgouingEdges){
 					
 					// If this edge is not a bridge edge , then found valid edge
-					if(advancedBFS(source, start, aEdge)){
-						e = aEdge;
+					if(advancedBFS(source, start, edge)){
+						e = edge;
 						break;
 					}
 				}
-			}else{
-				
-				for(MyOwnEdge aEdge : outgouingEdges){
-					e = aEdge;
+			}
+			else
+			{
+				for(MyOwnEdge edge : outgouingEdges)
+				{
+					e = edge;
 				}
 			}
 			
 			if(e == null) break;
 			
-			// Note the Edge as deleted
-			visitedEdges.add(e);
+			// Merke die Kante als gelöscht
+			delEdges.add(e);
 						
 			MyOwnVertex target;
 			if (!e.target().equals(source))
 				target = e.target();
 			else
-					target = e.source();
-			//eulertour.kanteEinfuegen(source, target, 0);
-			//System.out.println("Source: "+source+"Target: "+target);
-
+				target = e.source();
+			
 			queue.offer(target);
 		}
 	}
@@ -142,12 +104,14 @@ public class Fleury
 				
 				
 				// advanced step
-				Collection<MyOwnEdge> edgesBetween = new HashSet<>(graph.getMygraph().findEdgeSet(currentVertex, successor));
-				edgesBetween.removeAll(visitedEdges);
-				
-				if(edgesBetween.isEmpty()) continue;
-				if(edgesBetween.contains(edgeToIgnore) && edgesBetween.size() == 1) continue;
-				
+						Collection<MyOwnEdge> edgesBetween = new HashSet<>(graph.getMygraph().findEdgeSet(currentVertex, successor));
+						edgesBetween.removeAll(delEdges); // da delEdges nicht mehr im Graphen existieren
+						if(edgesBetween.isEmpty()) continue;
+						// Ignoriere die Kante, die entfernt werden muss, so kommt man nicht zum Start
+						// Ignoriere den Weg, wenn es nur eine Kante gibt und die jenige, die entfernt werden muss
+						if(edgesBetween.contains(edgeToIgnore) && edgesBetween.size() == 1) continue;
+				// --------------
+						
 				if(successor.equals(target)) return true;
 				
 				if(!queue.contains(successor)) queue.offer(successor);
@@ -156,19 +120,24 @@ public class Fleury
 		return false;
 	}
 
-//	public JungGraph getEulertour()
-//	{
-//		return eulertour;
-//	}
-
+	public MyOwnVertex getRandomStart()
+	{
+		List<MyOwnVertex> knoten = new ArrayList<>(graph.vertexSet());
+		int randomIndex;
+		MyOwnVertex target;
+		randomIndex = Random.generateRandomNumber(graph.getVertices().size(),1);
+		target = knoten.get(randomIndex-1);
+		return target;
+	}
+	
 	public List<MyOwnEdge> getVisitedEdges()
 	{
-		return visitedEdges;
+		return delEdges;
 	}
 	
 	public static void main(String[] args)
 	{
-		RandomEulerGraph randomGraph = new RandomEulerGraph("#undirected", 8);
+		RandomEulerGraph randomGraph = new RandomEulerGraph(8);
 		randomGraph.generateGraph();
 		randomGraph.show();
 		Fleury fleury = new Fleury(randomGraph.graph());

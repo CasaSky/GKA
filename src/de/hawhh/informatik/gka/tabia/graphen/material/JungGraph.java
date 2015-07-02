@@ -35,6 +35,11 @@ public class JungGraph
 		mygraph.addEdge(new MyOwnEdge(v1,v2,gewicht), v1, v2);
 	}
 	
+	public Collection<MyOwnEdge> getOutEdges(MyOwnVertex v)
+	{
+		return mygraph.getOutEdges(v);
+	}
+	
 	public void listToGraph(ArrayList<String> list)
 	{
 	    if (getReferenz().equals("#weighted") || getReferenz().equals("#directed #weighted"))

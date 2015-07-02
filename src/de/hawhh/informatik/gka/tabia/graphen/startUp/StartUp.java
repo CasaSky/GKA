@@ -11,9 +11,10 @@ public class StartUp
 	{
 		System.out.println("Gib den Dateinnamen ein:");
 		Scanner input = new Scanner(System.in);
-		String eingabe = input.next();
+		//String eingabe = input.next();
 		@SuppressWarnings("unused")
-		JungWerkzeug werkzeug = new JungWerkzeug("bspGraphen/bsp"+eingabe+".graph");
+		//JungWerkzeug werkzeug = new JungWerkzeug("bspGraphen/bsp"+eingabe+".graph");
+		JungWerkzeug werkzeug = new JungWerkzeug("bspGraphen/bsp6.graph");
 		input.close();
 	}
 

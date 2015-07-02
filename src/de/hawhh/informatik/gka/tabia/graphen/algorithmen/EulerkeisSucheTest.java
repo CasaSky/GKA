@@ -10,17 +10,20 @@ import java.util.List;
 import org.junit.Test;
 
 import de.hawhh.informatik.gka.tabia.graphen.daten.DateiManager;
-import de.hawhh.informatik.gka.tabia.graphen.material.Eulerkreis;
+import de.hawhh.informatik.gka.tabia.graphen.material.EulerkreisProperties;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnEdge;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 import de.hawhh.informatik.gka.tabia.graphen.material.RandomEulerGraph;
 import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 
-public class EuleurkeissucheTest
+public class EulerkeisSucheTest
 {
 	DateiManager manager;
 	JungGraph graph = new JungGraph("#undirected");
+	String pfad6 = "C:/Users/talal_000/Dropbox/Java/EclipseWorkspace/bspGraphen/bsp6.graph";
+	String pfad5 = "C:/Users/talal_000/Dropbox/Java/EclipseWorkspace/bspGraphen/bsp5.graph";
+
 	
 
 
@@ -40,79 +43,71 @@ public class EuleurkeissucheTest
 	@Test
 	public void testEulerGraph6()
 	{
-		String pfad = "C:/Users/talal_000/Dropbox/Java/EclipseWorkspace/bspGraphen/bsp6.graph";
-		leseEin(pfad);
+		leseEin(pfad6);
 		graph.listToGraph(manager.getList());
 		List<MyOwnEdge> kantenFolge = new LinkedList<>(graph.edgeSet());
 		//TODO Kanten sind unsortiert !!Eulertour nichtvorhanden
 		//assertTrue(Eulerkreis.isEulerKreis(kantenFolge, graph));
-		assertTrue(Eulerkreis.hatEulertour(graph));
+		assertTrue(EulerkreisProperties.isEulerGraph(graph));
 	}
 	
 	@Test
 	public void testEulerGraph5()
 	{
-		String pfad = "C:/Users/talal_000/Dropbox/Java/EclipseWorkspace/bspGraphen/bsp5.graph";
-		leseEin(pfad);
+		leseEin(pfad5);
 		graph.listToGraph(manager.getList());
 		List<MyOwnEdge> kantenFolge = new LinkedList<>(graph.edgeSet());
-		assertFalse(Eulerkreis.isEulerKreis(kantenFolge, graph));
+		assertFalse(EulerkreisProperties.isEulerKreis(kantenFolge, graph));
 	}
 	
 	@Test
 	public void testRandomEulerGraph1()
 	{
-		RandomEulerGraph random = new RandomEulerGraph("#undirected", 20);
+		RandomEulerGraph random = new RandomEulerGraph(20);
 		random.generateGraph();
-		assertTrue(Eulerkreis.hatEulertour(graph));
+		assertTrue(EulerkreisProperties.hatEulertour(graph));
 	}
 	
 	@Test
 	public void testRandomEulerGraph2()
 	{
-		RandomEulerGraph random = new RandomEulerGraph("#undirected", 100);
+		RandomEulerGraph random = new RandomEulerGraph(100);
 		random.generateGraph();
 		// TODO ------------------------------ is euler kreis muss verwendet werden
-		assertTrue(Eulerkreis.hatEulertour((random.graph())));
+		assertTrue(EulerkreisProperties.hatEulertour((random.graph())));
 	}
 	
 	@Test
-	public void testFleuryRandomGraph()
+	public void testFleuryAufRandomGraph()
 	{
-		RandomEulerGraph randomGraph = new RandomEulerGraph("#undirected", 15);
+		RandomEulerGraph randomGraph = new RandomEulerGraph(15);
 		randomGraph.generateGraph();
 		Fleury fleury = new Fleury(randomGraph.graph());
 		fleury.start();
 		List<MyOwnEdge> kantenFolge = new LinkedList<>(fleury.getVisitedEdges());
-		System.out.println(kantenFolge);
-		assertTrue(Eulerkreis.isEulerKreis(kantenFolge, randomGraph.graph()));
+		assertTrue(EulerkreisProperties.isEulerKreis(kantenFolge, randomGraph.graph()));
 	}
 	
 	@Test
-	public void testFleuryBeispiel6()
+	public void testFleuryAufBeispiel6()
 	{
-		System.out.println("bsp6");
-		String pfad = "C:/Users/talal_000/Dropbox/Java/EclipseWorkspace/bspGraphen/bsp6.graph";
-		leseEin(pfad);
+		leseEin(pfad6);
 		graph.listToGraph(manager.getList());
 		Fleury fleury = new Fleury(graph);
 		fleury.start();
 		List<MyOwnEdge> kantenFolge = new LinkedList<>(fleury.getVisitedEdges());
-		System.out.println(kantenFolge);
-		assertTrue(Eulerkreis.isEulerKreis(kantenFolge, graph));
+		assertTrue(EulerkreisProperties.isEulerKreis(kantenFolge, graph));
 	}
 	
 	@Test
-	public void testFleuryBeispiel5()
+	public void testFleuryAufBeispiel5()
 	{
-		System.out.println("bsp5");
-		String pfad = "C:/Users/talal_000/Dropbox/Java/EclipseWorkspace/bspGraphen/bsp5.graph";
-		leseEin(pfad);
+		leseEin(pfad5);
 		graph.listToGraph(manager.getList());
 		Fleury fleury = new Fleury(graph);
 		fleury.start();
 		List<MyOwnEdge> kantenFolge = new LinkedList<>(fleury.getVisitedEdges());
-		assertFalse(Eulerkreis.isEulerKreis(kantenFolge, graph));
+		assertFalse(EulerkreisProperties.isEulerKreis(kantenFolge, graph));
 	}
 	
 }

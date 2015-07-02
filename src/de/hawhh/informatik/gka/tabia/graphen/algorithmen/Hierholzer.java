@@ -1,10 +1,11 @@
 package de.hawhh.informatik.gka.tabia.graphen.algorithmen;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.hawhh.informatik.gka.tabia.graphen.material.Eulerkreis;
+import de.hawhh.informatik.gka.tabia.graphen.material.EulerkreisProperties;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnEdge;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
@@ -65,7 +66,8 @@ public class Hierholzer
 			}
 		}
 		int randomIndex;
-		randomIndex = generateRandomNumber(edges.size(),1);
+		System.out.println("size"+edges.size());
+		randomIndex = generateRandomNumber(edges.size()-1,0);
 		MyOwnEdge edge = edges.get(randomIndex);
 		return edge;
 	}
@@ -75,7 +77,7 @@ public class Hierholzer
 		List<MyOwnEdge> kantenliste = new LinkedList<MyOwnEdge>();
 		kantenliste.addAll(graph.edgeSet());
 		
-		if(Eulerkreis.isEulerKreis(kantenliste, graph))
+		if(EulerkreisProperties.isEulerKreis(kantenliste, graph))
 		{
 			MyOwnVertex aktiv;
 			MyOwnEdge edge;
@@ -106,7 +108,7 @@ public class Hierholzer
 				tourVertices.addAll(subtourVertices);
 				tourEdges.addAll(subtourEdges);
 			}
-			while(!Eulerkreis.isEulerKreis(tourEdges, graph));
+			while(!EulerkreisProperties.isEulerKreis(tourEdges, graph));
 			
 			return tourVertices;
 		}
@@ -115,8 +117,12 @@ public class Hierholzer
 	
 	public static void main(String[] args)
 	{
-		RandomEulerGraph testgraph = new RandomEulerGraph("#undirected", 5);
+		RandomEulerGraph testgraph = new RandomEulerGraph(5);
+		testgraph.generateGraph();
 		Hierholzer algorithmus = new Hierholzer(testgraph.graph());
-		System.out.println(algorithmus.start().toString());
+		List<MyOwnVertex> list = new ArrayList<MyOwnVertex>();
+		list = algorithmus.start();
+		if (list !=null)
+		System.out.println(list.toString());
 	}
 }

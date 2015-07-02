@@ -2,28 +2,26 @@ package de.hawhh.informatik.gka.tabia.graphen.material;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
+import de.hawhh.informatik.gka.tabia.graphen.service.Random;
 
 public class RandomEulerGraph
 {
-
 	private JungGraph graph;
 	private int maxKnoten;
 	private Collection<MyOwnVertex> knotenSet;
 	
-	public RandomEulerGraph(String referenz, int maxKnoten)
+	public RandomEulerGraph(int maxKnoten)
 	{
-		assert referenz != null : "Vorbedingung verletzt: referenz != null";
-		graph = new JungGraph(referenz);
+		graph = new JungGraph("#undirected");
 		this.maxKnoten = maxKnoten;
 	}
 	
 	public RandomEulerGraph(String referenz)
 	{
 		graph = new JungGraph(referenz);
-		this.maxKnoten = generateRandomNumber(3, 100);
+		this.maxKnoten = Random.generateRandomNumber(3, 100);
 	}
 	
 	public JungGraph graph()
@@ -45,7 +43,7 @@ public class RandomEulerGraph
 			MyOwnVertex v;
 			do
 			{
-				temp = generateRandomNumber(maxKnoten*3, 1);
+				temp = Random.generateRandomNumber(maxKnoten*3, 1);
 				 v = new MyOwnVertex(""+temp,temp);
 			} while (graph.getVertices().contains(v));
 			graph.knotenEinfuegen(Integer.toString(temp),temp);
@@ -64,20 +62,6 @@ public class RandomEulerGraph
 		//graph.knotenEinfuegen("0", 0);
 	}
 	
-	// Generiert eine Random Number zwichen min und max
-	public int generateRandomNumber(int max, int min)
-	{
-		return (int) (Math.random() * (max - min) + min);
-	}
-	
-	public int generateRandomOddNumber(int max, int min)
-	{
-		if (max % 2 == 0) --max;
-		if (min % 2 == 0) ++min;
-		int random_No = min + 2*(int)(Math.random()*((max-min)/2+1));
-		return random_No;
-	}
-	
 	public ArrayList<MyOwnVertex> alleUngeradeKnoten()
 	{
 		ArrayList<MyOwnVertex> ungeradeKnoten = new ArrayList<MyOwnVertex>();
@@ -88,7 +72,6 @@ public class RandomEulerGraph
 				ungeradeKnoten.add(v);
 			}
 		}
-		//System.out.println(ungeradeKnoten);
 		return ungeradeKnoten;
 	}
 	
@@ -96,7 +79,7 @@ public class RandomEulerGraph
 	{
 			int randomIndex;
 			MyOwnVertex target;
-			randomIndex = generateRandomNumber(list.size(),0);
+			randomIndex = Random.generateRandomNumber(list.size(),0);
 			target = list.get(randomIndex);
 		
 		return target;
@@ -139,6 +122,7 @@ public class RandomEulerGraph
 			else
 				graph.kanteEinfuegen(target, source, 0);
 		}
+		assert EulerkreisProperties.isEulerGraph(graph) : "Vorbedingung verletzt: EulerkreisProperties.isEulerGraph(graph)";
 	}
 	
 	// Holt einen zufälligen Knoten aus dem Graphen
@@ -150,7 +134,7 @@ public class RandomEulerGraph
 		MyOwnVertex target;
 		do
 		{
-			randomIndex = generateRandomNumber(maxKnoten,0);
+			randomIndex = Random.generateRandomNumber(maxKnoten,0);
 			target = (MyOwnVertex) array[randomIndex];
 		}while (target.equals(v));
 		return target;
@@ -165,7 +149,7 @@ public class RandomEulerGraph
 	
 	public static void main(String[] args)
 	{
-		RandomEulerGraph random = new RandomEulerGraph("#undirected", 10);
+		RandomEulerGraph random = new RandomEulerGraph(10);
 		random.generateGraph();
 		random.show();
 	}
