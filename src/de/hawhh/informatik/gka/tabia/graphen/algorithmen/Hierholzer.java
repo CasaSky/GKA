@@ -1,7 +1,5 @@
 package de.hawhh.informatik.gka.tabia.graphen.algorithmen;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,22 +12,27 @@ import de.hawhh.informatik.gka.tabia.graphen.material.RandomEulerGraph;
 public class Hierholzer
 {
 	private JungGraph graph;
-	private HashSet<MyOwnEdge> visitedEdges;
+	private List<MyOwnEdge> visitedEdges;
+	private MyOwnEdge randomUnvisitedEdge;
+	private MyOwnVertex randomStart;
 	private List<MyOwnVertex> subtourVertices;
 	private List<MyOwnEdge> subtourEdges;
 	private List<MyOwnVertex> tourVertices;
 	private List<MyOwnEdge> tourEdges;
 	private MyOwnVertex start;
+	List<MyOwnVertex> nichtFertigeKnoten;
 
 	
 	public Hierholzer(JungGraph graph)
 	{
 		this.graph = graph;
-		this.visitedEdges = new HashSet<MyOwnEdge>();
+		this.visitedEdges = new LinkedList<MyOwnEdge>();
 		this.subtourVertices = new LinkedList<MyOwnVertex>();
 		this.subtourEdges = new LinkedList<MyOwnEdge>();
 		this.tourVertices = new LinkedList<MyOwnVertex>();
 		this.tourEdges = new LinkedList<MyOwnEdge>();
+		this.randomUnvisitedEdge = null;
+		this.randomStart = null;
 	}
 	
 	// Generiert eine Random Number zwichen min und max
@@ -38,140 +41,149 @@ public class Hierholzer
 		return (int) (Math.random() * (max - min) + min);
 	}
 	
-	public MyOwnVertex getRandomVertex(HashSet<MyOwnEdge> visited)
+	public List<MyOwnVertex> nichtFertigeKnoten(List<MyOwnVertex> allVertices, List<MyOwnEdge> visited)
 	{
-
-	    List<MyOwnVertex> allVertices = new LinkedList<MyOwnVertex>();
-	    allVertices.addAll(graph.getVertices());
-	    
-        Object[] array = nichtFertigeKnoten(allVertices ,visited);
-        
-        int randomIndex;
-        MyOwnVertex target;
-        randomIndex = generateRandomNumber(array.length,1);
-        target = (MyOwnVertex) array[randomIndex];
-        
-        return target;
+		nichtFertigeKnoten = new LinkedList<MyOwnVertex>();
+		int counter = 0;
+		
+		for(MyOwnVertex v : allVertices)
+		{
+			for(MyOwnEdge e : visited)
+			{
+				if(e.source().equals(v) || e.target().equals(v))
+				{
+					++counter;
+				}
+			}
+			if(graph.grad(v) > counter)
+			{
+				nichtFertigeKnoten.add(v);
+			}
+		}
+		
+		
+		return nichtFertigeKnoten;
 	}
 	
-	private Object[] nichtFertigeKnoten(List<MyOwnVertex> allVertices, HashSet<MyOwnEdge> visited)
-    {
-        List<MyOwnVertex> nichtFertigeKnoten = new LinkedList<MyOwnVertex>();
-        int usedCounter = 0;
-        
-        for(MyOwnVertex v : allVertices)
-        {
-            for(MyOwnEdge e : visited)
-            {
-                if(e.target() == v || e.source() == v)
-                {
-                    ++usedCounter;
-                }   
-            }
-            if(usedCounter < graph.grad(v))
-            {
-                nichtFertigeKnoten.add(v);
-            }
-        }
-        return nichtFertigeKnoten.toArray();
-    }
-	
-	public MyOwnEdge getRandomUnvisitedEdge(MyOwnVertex vertex)
+	public void searchRandomStart()
 	{
-		Object[] array = graph.edgeSet().toArray();
-		List<MyOwnEdge> edges = new LinkedList<MyOwnEdge>();
+
+		List<MyOwnVertex> allVertices = new LinkedList<MyOwnVertex>(graph.getVertices());
 		
-		for(int i = 0; i < array.length; i++)
+		List<MyOwnVertex> nichtFertigeKnoten= nichtFertigeKnoten(allVertices, visitedEdges);
+		int randomIndex;
+		
+		if(nichtFertigeKnoten.size() > 0)
+		{
+			randomIndex = generateRandomNumber(nichtFertigeKnoten.size(),0);
+			randomStart = (MyOwnVertex) nichtFertigeKnoten.get(randomIndex);
+		}
+	}
+	
+	public void searchRandomUnvisitedEdge(MyOwnVertex vertex)
+	{
+		List<MyOwnEdge> edgeList = new LinkedList<MyOwnEdge>(graph.edgeSet());
+		List<MyOwnEdge> unvisitedEdges = new LinkedList<MyOwnEdge>();
+		
+		for(int i = 0; i < edgeList.size(); i++)
 		{
 			MyOwnEdge target;
-			target = (MyOwnEdge) array[i];
+			target = edgeList.get(i);
 			if(!visitedEdges.contains(target))
 			{
-				if(target.source() == vertex || target.target() == vertex)
+				if(target.source().equals(vertex) || target.target().equals(vertex))
 				{
-					edges.add(target);
+					unvisitedEdges.add(target);
 				}
 			}
 		}
 		
 		int randomIndex;
-<<<<<<< HEAD
-		System.out.println("size"+edges.size());
-		randomIndex = generateRandomNumber(edges.size()-1,0);
-=======
-		randomIndex = generateRandomNumber(edges.size(),0);
->>>>>>> origin/master
-		MyOwnEdge edge = edges.get(randomIndex);
-		
-		return edge;
+		if(unvisitedEdges.size() > 0)
+		{
+			randomIndex = generateRandomNumber(unvisitedEdges.size(),0);
+			randomUnvisitedEdge = unvisitedEdges.get(randomIndex);
+		}
 	}
 	
-	public List<MyOwnVertex> start()
-	{	
-		List<MyOwnEdge> kantenliste = new LinkedList<MyOwnEdge>();
-		kantenliste.addAll(graph.edgeSet());
-		List<MyOwnVertex> vertex = new LinkedList<MyOwnVertex>();
-		
-		if(EulerkreisProperties.isEulerKreis(kantenliste, graph))
+	public void start()
+	{			
+		if(EulerkreisProperties.isEulerGraph(graph))
 		{
 			MyOwnVertex aktiv;
 			MyOwnEdge edge;
-				
-			do
-			{				
-			    /*if(Eulerkreis.isEulerKreis(tourEdges, graph))
-			    {
-			        break;
-			    }
-			    else
-			    {*/
-    			    start = getRandomVertex(visitedEdges);
-    	            aktiv = start;
-    	            System.out.print(start.toString()+ " ");
-    			    
-    			    do
-    				{
-    					edge = getRandomUnvisitedEdge(aktiv);
-    					visitedEdges.add(edge);
-    					subtourVertices.add(aktiv);
-    					subtourEdges.add(edge);
-    					
-    					if(edge.target() == aktiv)
-    					{
-    						aktiv = edge.source();
-    					}
-    					else
-    					{
-    						aktiv = edge.target();
-    					}
-    				}
-    				while(aktiv != start);
-    				
-    			    tourVertices.addAll(subtourVertices);
-    			    tourEdges.addAll(subtourEdges);
-//			    }
-			}
-			while(!EulerkreisProperties.isEulerKreis(tourEdges, graph));
 			
-			return tourVertices;
+			do
+			{
+				searchRandomStart();
+				start = getRandomStart();
+				aktiv = start;
+				
+				do
+				{
+					searchRandomUnvisitedEdge(aktiv);
+					edge = getRandomUnvisitedEdge();
+					visitedEdges.add(edge);
+					
+					subtourVertices.add(aktiv);
+					subtourEdges.add(edge);
+					
+					if(edge.target().equals(aktiv))
+					{
+						aktiv = edge.source();
+					}
+					else
+					{
+						aktiv = edge.target();
+					}
+				}
+				while(aktiv != start);
+				
+				tourVertices.addAll(subtourVertices);
+				tourVertices.add(null);
+				tourEdges.addAll(subtourEdges); //null entfernen und eulertour einfügen, rekursiv.
+				tourEdges.add(null);
+			}
+			while(nichtFertigeKnoten.size() > 0);
 		}
-		return vertex;
+		else
+		{
+			System.err.println("Dies ist kein Eulergraph");
+		}
+	}
+	
+	public List<MyOwnVertex> getTourVertices()
+	{
+		return tourVertices;
+	}
+	
+	public MyOwnEdge getRandomUnvisitedEdge()
+	{
+		return randomUnvisitedEdge;
+	}
+	
+	public MyOwnVertex getRandomStart()
+	{
+		return randomStart;
 	}
 	
 	public static void main(String[] args)
 	{
-<<<<<<< HEAD
 		RandomEulerGraph testgraph = new RandomEulerGraph(5);
 		testgraph.generateGraph();
-=======
-		RandomEulerGraph testgraph = new RandomEulerGraph("#undirected", 5);
-		testgraph.generateGraph();
 		testgraph.show();
->>>>>>> origin/master
 		Hierholzer algorithmus = new Hierholzer(testgraph.graph());
-		List<MyOwnVertex> list = new ArrayList<MyOwnVertex>();
-		list = algorithmus.start();
-		if (list !=null)
-		System.out.println(list.toString());
+		algorithmus.start();
+		System.out.println(algorithmus.getTourEdges().toString());
+	}
+
+	public List<MyOwnEdge> getVisitedEdges()
+	{
+		return visitedEdges;
+	}
+
+	public List<MyOwnEdge> getTourEdges()
+	{
+		return tourEdges;
 	}
 }

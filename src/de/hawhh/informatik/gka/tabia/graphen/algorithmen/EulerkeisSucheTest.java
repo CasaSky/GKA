@@ -3,7 +3,6 @@ package de.hawhh.informatik.gka.tabia.graphen.algorithmen;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,9 +12,7 @@ import de.hawhh.informatik.gka.tabia.graphen.daten.DateiManager;
 import de.hawhh.informatik.gka.tabia.graphen.material.EulerkreisProperties;
 import de.hawhh.informatik.gka.tabia.graphen.material.JungGraph;
 import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnEdge;
-import de.hawhh.informatik.gka.tabia.graphen.material.MyOwnVertex;
 import de.hawhh.informatik.gka.tabia.graphen.material.RandomEulerGraph;
-import de.hawhh.informatik.gka.tabia.graphen.werkzeug.JungWerkzeug;
 
 public class EulerkeisSucheTest
 {
@@ -45,9 +42,6 @@ public class EulerkeisSucheTest
 	{
 		leseEin(pfad6);
 		graph.listToGraph(manager.getList());
-		List<MyOwnEdge> kantenFolge = new LinkedList<>(graph.edgeSet());
-		//TODO Kanten sind unsortiert !!Eulertour nichtvorhanden
-		//assertTrue(Eulerkreis.isEulerKreis(kantenFolge, graph));
 		assertTrue(EulerkreisProperties.isEulerGraph(graph));
 	}
 	
@@ -80,7 +74,17 @@ public class EulerkeisSucheTest
 	@Test
 	public void testFleuryAufRandomGraph()
 	{
-		RandomEulerGraph randomGraph = new RandomEulerGraph(15);
+		RandomEulerGraph randomGraph;
+//		for (int i = 4; i < 100; i=i+2)
+//		{
+//			randomGraph = new RandomEulerGraph(i);
+//			randomGraph.generateGraph();
+//			Fleury fleury = new Fleury(randomGraph.graph());
+//			fleury.start();
+//			List<MyOwnEdge> kantenFolge = new LinkedList<>(fleury.getVisitedEdges());
+//			assertTrue(EulerkreisProperties.isEulerKreis(kantenFolge, randomGraph.graph()));
+//		}
+		randomGraph = new RandomEulerGraph(10);
 		randomGraph.generateGraph();
 		Fleury fleury = new Fleury(randomGraph.graph());
 		fleury.start();
@@ -108,6 +112,18 @@ public class EulerkeisSucheTest
 		fleury.start();
 		List<MyOwnEdge> kantenFolge = new LinkedList<>(fleury.getVisitedEdges());
 		assertFalse(EulerkreisProperties.isEulerKreis(kantenFolge, graph));
+	}
+	
+	@Test
+	public void testHierholzerAufRandomGraph()
+	{
+//		RandomEulerGraph randomGraph;
+//		randomGraph = new RandomEulerGraph(100);
+//		randomGraph.generateGraph();
+//		Hierholzer Hierholzer = new Hierholzer(randomGraph.graph());
+//		Hierholzer.start();
+		//List<MyOwnEdge> kantenFolge = new LinkedList<>(Hierholzer.getVisitedEdges());
+		//assertTrue(EulerkreisProperties.isEulerKreis(kantenFolge, randomGraph.graph()));
 	}
 	
 }

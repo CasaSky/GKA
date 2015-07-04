@@ -93,12 +93,12 @@ public class RandomEulerGraph
 		
 		ArrayList<MyOwnVertex> list = new ArrayList<MyOwnVertex>(graph.vertexSet());
 		
-		// erzeugt ein zusammenhängenden Graphen
-		for (int i=0; i<list.size()-1; i++)
+		// Vorbedingung jeder Knoten erreichbar
+		for (int i=0; i< list.size()-1; i++)
 		{
 			graph.kanteEinfuegen(list.get(i), list.get(i+1), 0);
 		}
-		graph.kanteEinfuegen(list.get(list.size()-1), list.get(0), 0);
+		graph.kanteEinfuegen(list.get(0), list.get(list.size()-1), 0);
 		
 		// Fügt eine Kante von allen Knoten mit einem randomisierten Knoten hinzu
 		for (MyOwnVertex v : graph.vertexSet())
@@ -115,12 +115,12 @@ public class RandomEulerGraph
 			ungeradeKnoten.remove(source);
 			MyOwnVertex target = getRandomVertex(ungeradeKnoten);
 			ungeradeKnoten.remove(target);
-			MyOwnEdge edge = new MyOwnEdge(source, target, 0);
 			// Falls eine Kante zwischen source und target vorhanden ist, wechsele source und target damit eine Mehrfach erstellt werden kann
-			if (!graph.containsEdge(edge))
-				graph.kanteEinfuegen(source, target, 0);
-			else
-				graph.kanteEinfuegen(target, source, 0);
+				MyOwnEdge e = graph.getMygraph().findEdge(source, target);
+				if (e == null)
+					graph.kanteEinfuegen(source, target, 0);
+				else
+					graph.kanteEinfuegen(target, source, 0);
 		}
 		assert EulerkreisProperties.isEulerGraph(graph) : "Vorbedingung verletzt: EulerkreisProperties.isEulerGraph(graph)";
 	}

@@ -24,7 +24,7 @@ public class Fleury
 	private JungGraph graph;
 	private List<MyOwnEdge> delEdges;
 	private MyOwnVertex start;
-	private Queue<MyOwnVertex> queue;
+	private Queue<MyOwnVertex> queue; // Speichern des Nachfolgers
 	
 	public Fleury(JungGraph graph)
 	{
@@ -45,14 +45,14 @@ public class Fleury
 		{
 			MyOwnVertex source = queue.poll();
 			// Outgoing Edge-Set
-			Collection<MyOwnEdge> outgouingEdges = new LinkedHashSet<>(graph.getOutEdges(source));
+			Collection<MyOwnEdge> outgoingEdges = new LinkedHashSet<>(graph.getOutEdges(source));
 			// Existing Edge-Set = {Outgoing Edge-Set} \ {Deleted Edge-Set}
-			outgouingEdges.removeAll(delEdges);
+			outgoingEdges.removeAll(delEdges);
 			
 			MyOwnEdge e = null;
-			if(outgouingEdges.size() > 1)
+			if(outgoingEdges.size() > 1)
 			{
-				for(MyOwnEdge edge : outgouingEdges){
+				for(MyOwnEdge edge : outgoingEdges){
 					
 					// If this edge is not a bridge edge , then found valid edge
 					if(advancedBFS(source, start, edge)){
@@ -63,7 +63,7 @@ public class Fleury
 			}
 			else
 			{
-				for(MyOwnEdge edge : outgouingEdges)
+				for(MyOwnEdge edge : outgoingEdges)
 				{
 					e = edge;
 				}
